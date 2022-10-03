@@ -9,14 +9,13 @@ extern motor RightFront;
 extern motor LeftBack;
 extern motor RightBack;
 extern motor RightLift;
-extern motor Clamp;
 extern inertial Inertial;
 extern digital_out OldbackPiston;
 extern motor Sporklift;
-extern motor Clamp2;
 extern motor RightMiddle;
 extern digital_out ClampSolenoid;
 extern motor LeftMiddle;
+extern motor IntakeRoller;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

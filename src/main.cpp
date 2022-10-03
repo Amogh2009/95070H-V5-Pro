@@ -16,14 +16,13 @@
 // LeftBack             motor         3               
 // RightBack            motor         4               
 // RightLift            motor         10              
-// Clamp                motor         20              
 // Inertial             inertial      21              
 // OldbackPiston        digital_out   D               
 // Sporklift            motor         9               
-// Clamp2               motor         16              
 // RightMiddle          motor         14              
 // ClampSolenoid        digital_out   A               
 // LeftMiddle           motor         7               
+// IntakeRoller         motor         6               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -270,21 +269,6 @@ void clampMovement() {
   }
 }
 
-void clamp2Movement() {
-  if(Controller1.ButtonR2.pressing()){
-    Clamp2.setVelocity(200,percent);
-    Clamp2.spin(forward);
-  }
-  else if(Controller1.ButtonR1.pressing()){
-    Clamp2.setVelocity(200,percent);
-    Clamp2.spin(reverse);
-  }
-  else{
-    Clamp2.setStopping(hold);
-    Clamp2.stop();
-  }
-}
-
 void turnCounterClockwise(double amount){
   Inertial.setRotation(0, degrees);
   while(fabs(Inertial.rotation(degrees)) < amount){
@@ -388,7 +372,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "Left Neutral", "AWP Left", "AWP Right", "2 Goal Right", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "1 Roller Red", "1 Roller Blue", "AWP Right", "2 Goal Right", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -446,75 +430,23 @@ void autonomous(void) {
     case 0:{ //Disabled
       break;
     }
-    case 1:{ //Left Neutral
+    case 1:{ //1 Roller Red
       setStopping(coast);
       setVelocity(100);
-      ClampSolenoid.set(false);
-      RightLift.spinFor(reverse, 50, degrees, false);
-
-      if (elevated) {
-        move(forward, x - 140);
-      } else {
-        move(forward, x-120);
-      }
       
-      wait(100, msec);
+      IntakeRoller.spinFor(forward, 90, degrees, true);
 
-      ClampSolenoid.set(true);
-      move(reverse, x);
-      break; 
-    }
-    case 2: { //AWP Left
-      ClampSolenoid.set(false);
       break;
     }
-    case 3: { //AWP Right
-      setStopping(coast);
-      break;
-    }
-    case 4: { //2 Goal Right
+    case 2: { //1 Roller Blue
       setStopping(coast);
       setVelocity(100);
-      ClampSolenoid.set(false);
-      if (elevated) {
-        move(forward, x);
-      } else {
-        move(forward, x + 40);
-      }
       
-      wait(100, msec);
+      IntakeRoller.spinFor(reverse, 90, degrees, true);
 
-      ClampSolenoid.set(true);
-
-      move(reverse, x - 150);
-
-      int turnDegrees = 440 + (elevated ? 7 : 0);
-
-      turn(::right, turnDegrees);
-
-      Sporklift.setVelocity(100, percent);
-      Sporklift.spinFor(forward, 600, degrees, true);
-
-      // going reverse to pick up tall goal at 100% power
-      move(reverse, 1000);
-
-      // going reverse at 50% power
-      setVelocity(50);
-      move(reverse, 200);
-
-      // reset velocity to 100%
-      setVelocity(100);
-
-      Sporklift.setVelocity(50, percent);
-      Sporklift.spinFor(reverse, 400, degrees, true);
-
-      move(forward, 1300);
-      
-      wait(100, msec);
-      
       break;
     }
-    case 5: { //Right Neutral AWP
+    case 3: { //Right Neutral AWP
       setStopping(coast);
       setVelocity(100);
       LeftFront.setPosition(0, degrees);
@@ -570,7 +502,7 @@ void autonomous(void) {
       
       break; 
     }
-    case 6: { //Right Mid
+    case 4: { //Right Mid
       setStopping(coast);
       setVelocity(100);
       RightLift.spinFor(reverse, 50, degrees, false);
@@ -587,7 +519,7 @@ void autonomous(void) {
       move(reverse, x + 230);
       break;
     }
-    case 7: { //AWP Carry from Left
+    case 5: { //AWP Carry from Left
       moveDrivetrain(100, 200, true, true);
       ClampSolenoid.set(true);
     }
@@ -621,7 +553,6 @@ void sporkliftMovement() {
 void usercontrol(void) {
  // User control code here, inside the loop
   while (1) {
-    Clamp.setStopping(hold);
     simpleDrive();
     armLift();
     clampMovement();
@@ -629,7 +560,6 @@ void usercontrol(void) {
     platformMode();
     if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
       RightLift.stop(hold);
-      Clamp.stop(hold);
       while((Controller1.ButtonY.pressing() && Controller1.ButtonA.pressing()) == false){
         goSlow();
         wait(10, msec);
