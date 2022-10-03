@@ -148,19 +148,15 @@ const turntype right = 0;
 void turn(turntype direction, int rotation) {
   LeftFront.spinFor(direction ? reverse : forward, rotation, degrees, false);
   LeftBack.spinFor(direction ? reverse : forward, rotation, degrees, false);
-  LeftMiddle.spinFor(direction ? reverse : forward, rotation, degrees, false);
   RightFront.spinFor(direction ? forward : reverse, rotation, degrees, false);
-  RightBack.spinFor(direction ? forward : reverse, rotation, degrees, false);
-  RightMiddle.spinFor(direction ? forward : reverse, rotation, degrees, true);
+  RightBack.spinFor(direction ? forward : reverse, rotation, degrees, true);
 }
 
 void move(vex::directionType direction, int rotation) {
   LeftFront.spinFor(direction, rotation, degrees, false);
   LeftBack.spinFor(direction, rotation, degrees, false);
-  LeftMiddle.spinFor(direction, rotation, degrees, false);
   RightFront.spinFor(direction, rotation, degrees, false);
-  RightBack.spinFor(direction, rotation, degrees, false);
-  RightMiddle.spinFor(direction, rotation, degrees, true);
+  RightBack.spinFor(direction, rotation, degrees, true);
 }
 
 void platformMode() {
@@ -434,6 +430,16 @@ void autonomous(void) {
       setStopping(coast);
       setVelocity(100);
       
+      move(forward, 20);
+
+      turn(::left, 90);
+
+      move(forward, 100);
+
+      turn(::right, 90);
+
+      move(reverse, 20);
+
       IntakeRoller.spinFor(forward, 90, degrees, true);
 
       break;
@@ -442,6 +448,16 @@ void autonomous(void) {
       setStopping(coast);
       setVelocity(100);
       
+      move(forward, 20);
+
+      turn(::left, 90);
+
+      move(forward, 100);
+
+      turn(::right, 90);
+
+      move(reverse, 20);
+
       IntakeRoller.spinFor(reverse, 90, degrees, true);
 
       break;
