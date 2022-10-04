@@ -409,6 +409,7 @@ void autonSelector(){
 void pre_auton(void) {
  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  Brain.Screen.drawImageFromFile("bike discord banner.png", 0, 0);
   RightLift.stop(hold);
   Inertial.calibrate();
   wait(3, sec);
