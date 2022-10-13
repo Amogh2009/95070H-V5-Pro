@@ -264,6 +264,8 @@ void intakeRollerMovement() {
   else{
     /*Clamp.setStopping(hold);
     Clamp.stop();*/
+    IntakeRoller.setStopping(hold);
+    IntakeRoller.stop();
   }
 }
 
@@ -432,16 +434,6 @@ void autonomous(void) {
     case 1:{ //1 Roller Red
       setStopping(coast);
       setVelocity(100);
-      
-      move(forward, 20);
-
-      turn(::left, 90);
-
-      move(forward, 100);
-
-      turn(::right, 90);
-
-      move(reverse, 20);
 
       IntakeRoller.spinFor(forward, 90, degrees, true);
 
@@ -450,16 +442,6 @@ void autonomous(void) {
     case 2: { //1 Roller Blue
       setStopping(coast);
       setVelocity(100);
-      
-      move(forward, 20);
-
-      turn(::left, 90);
-
-      move(forward, 100);
-
-      turn(::right, 90);
-
-      move(reverse, 20);
 
       IntakeRoller.spinFor(reverse, 90, degrees, true);
 
