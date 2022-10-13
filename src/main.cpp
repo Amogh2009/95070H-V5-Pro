@@ -225,7 +225,7 @@ void goSlow(){
 
 void simpleDrive(){
   double forwardAmount = Controller1.Axis3.position();
-  double turnAmount = Controller1.Axis1.position(); //Axis 4 for unified joystick
+  double turnAmount = Controller1.Axis4.position(); //Axis 4 for unified joystick
   
   RightFront.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   RightBack.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
@@ -432,18 +432,18 @@ void autonomous(void) {
       break;
     }
     case 1:{ //1 Roller Red
-      setStopping(coast);
-      setVelocity(100);
-
-      IntakeRoller.spinFor(forward, 90, degrees, true);
+      move(reverse, 100);
+      
+      IntakeRoller.setVelocity(100, percent);
+      IntakeRoller.spinFor(forward, 270, degrees, true);
 
       break;
     }
     case 2: { //1 Roller Blue
-      setStopping(coast);
-      setVelocity(100);
-
-      IntakeRoller.spinFor(reverse, 90, degrees, true);
+      move(reverse, 100);
+      
+      IntakeRoller.setVelocity(100, percent);
+      IntakeRoller.spinFor(reverse, 270, degrees, true);
 
       break;
     }
