@@ -248,16 +248,18 @@ void armLift(){
   }
 }
 
-void clampMovement() {
+void intakeRollerMovement() {
   if(Controller1.ButtonR1.pressing()){
     /*Clamp.setVelocity(200,percent);
     Clamp.spin(forward);*/
-    ClampSolenoid.set(false);
+    IntakeRoller.setVelocity(100, percent);
+    IntakeRoller.spin(forward);
   }
   else if(Controller1.ButtonR2.pressing()){
     /*Clamp.setVelocity(200, percent);
     Clamp.spin(reverse);*/
-    ClampSolenoid.set(true);
+    IntakeRoller.setVelocity(100, percent);
+    IntakeRoller.spin(reverse);
   }
   else{
     /*Clamp.setStopping(hold);
@@ -572,7 +574,7 @@ void usercontrol(void) {
   while (1) {
     simpleDrive();
     armLift();
-    clampMovement();
+    intakeRollerMovement();
     sporkliftMovement();
     platformMode();
     if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
