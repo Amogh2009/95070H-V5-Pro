@@ -21,8 +21,10 @@
 // Sporklift            motor         9               
 // RightMiddle          motor         14              
 // ClampSolenoid        digital_out   A               
-// LeftMiddle           motor         7               
 // IntakeRoller         motor         6               
+// Flywheel1            motor         7               
+// LeftMiddle           motor         20              
+// Flywheel2            motor         8               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -266,6 +268,21 @@ void intakeRollerMovement() {
     Clamp.stop();*/
     IntakeRoller.setStopping(hold);
     IntakeRoller.stop();
+  }
+}
+
+void flywheelMovement() {
+  if(Controller1.ButtonL1.pressing()){
+    Flywheel1.setVelocity(100, percent);
+    Flywheel2.setVelocity(100, percent);
+    Flywheel1.spin(forward);
+    Flywheel2.spin(reverse);
+  }
+  else {
+    Flywheel1.setStopping(coast);
+    Flywheel2.setStopping(coast);
+    Flywheel1.stop();
+    Flywheel2.stop();
   }
 }
 
@@ -557,6 +574,7 @@ void usercontrol(void) {
     simpleDrive();
     armLift();
     intakeRollerMovement();
+    flywheelMovement();
     sporkliftMovement();
     platformMode();
     if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){

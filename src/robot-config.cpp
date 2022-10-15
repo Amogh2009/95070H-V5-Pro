@@ -19,8 +19,10 @@ digital_out OldbackPiston = digital_out(Brain.ThreeWirePort.D);
 motor Sporklift = motor(PORT9, ratio18_1, false);
 motor RightMiddle = motor(PORT14, ratio18_1, false);
 digital_out ClampSolenoid = digital_out(Brain.ThreeWirePort.A);
-motor LeftMiddle = motor(PORT7, ratio18_1, false);
 motor IntakeRoller = motor(PORT6, ratio6_1, false);
+motor Flywheel1 = motor(PORT7, ratio18_1, false);
+motor LeftMiddle = motor(PORT20, ratio18_1, false);
+motor Flywheel2 = motor(PORT8, ratio18_1, false);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

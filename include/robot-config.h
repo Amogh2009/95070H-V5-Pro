@@ -14,8 +14,10 @@ extern digital_out OldbackPiston;
 extern motor Sporklift;
 extern motor RightMiddle;
 extern digital_out ClampSolenoid;
-extern motor LeftMiddle;
 extern motor IntakeRoller;
+extern motor Flywheel1;
+extern motor LeftMiddle;
+extern motor Flywheel2;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
