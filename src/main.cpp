@@ -254,13 +254,13 @@ void intakeRollerMovement() {
   if(Controller1.ButtonR1.pressing()){
     /*Clamp.setVelocity(200,percent);
     Clamp.spin(forward);*/
-    IntakeRoller.setVelocity(100, percent);
+    IntakeRoller.setVelocity(69, percent);
     IntakeRoller.spin(forward);
   }
   else if(Controller1.ButtonR2.pressing()){
     /*Clamp.setVelocity(200, percent);
     Clamp.spin(reverse);*/
-    IntakeRoller.setVelocity(100, percent);
+    IntakeRoller.setVelocity(69, percent);
     IntakeRoller.spin(reverse);
   }
   else{
