@@ -286,6 +286,17 @@ void flywheelMovement() {
   }
 }
 
+void indexerMovement() {
+  if(Controller1.ButtonL2.pressing()) {
+    Indexer.setVelocity(100, percent);
+    Indexer.spin(forward);
+  }
+  else {
+    Indexer.setStopping(coast);
+    Indexer.stop();
+  }
+}
+
 void turnCounterClockwise(double amount){
   Inertial.setRotation(0, degrees);
   while(fabs(Inertial.rotation(degrees)) < amount){
@@ -575,6 +586,7 @@ void usercontrol(void) {
     armLift();
     intakeRollerMovement();
     flywheelMovement();
+    indexerMovement();
     sporkliftMovement();
     platformMode();
     if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
