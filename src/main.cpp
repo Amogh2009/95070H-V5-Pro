@@ -3,6 +3,146 @@
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
 // LeftFront            motor         1               
+// RightFront           motor         13              
+// LeftBack             motor         15              
+// RightBack            motor         11              
+// RightLift            motor         5               
+// Inertial             inertial      21              
+// OldbackPiston        digital_out   D               
+// Sporklift            motor         19              
+// RightMiddle          motor         14              
+// ClampSolenoid        digital_out   A               
+// IntakeRoller         motor         6               
+// Flywheel1            motor         12              
+// LeftMiddle           motor         20              
+// Flywheel2            motor         9               
+// Indexer              motor         10              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// LeftFront            motor         1               
+// RightFront           motor         13              
+// LeftBack             motor         15              
+// RightBack            motor         11              
+// RightLift            motor         5               
+// Inertial             inertial      21              
+// OldbackPiston        digital_out   D               
+// Sporklift            motor         19              
+// RightMiddle          motor         14              
+// ClampSolenoid        digital_out   A               
+// IntakeRoller         motor         6               
+// Flywheel1            motor         12              
+// LeftMiddle           motor         20              
+// Flywheel2            motor         9               
+// Indexer              motor         10              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// LeftFront            motor         1               
+// RightFront           motor         13              
+// LeftBack             motor         3               
+// RightBack            motor         11              
+// RightLift            motor         5               
+// Inertial             inertial      21              
+// OldbackPiston        digital_out   D               
+// Sporklift            motor         19              
+// RightMiddle          motor         14              
+// ClampSolenoid        digital_out   A               
+// IntakeRoller         motor         6               
+// Flywheel1            motor         12              
+// LeftMiddle           motor         20              
+// Flywheel2            motor         9               
+// Indexer              motor         10              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// LeftFront            motor         1               
+// RightFront           motor         2               
+// LeftBack             motor         3               
+// RightBack            motor         11              
+// RightLift            motor         5               
+// Inertial             inertial      21              
+// OldbackPiston        digital_out   D               
+// Sporklift            motor         19              
+// RightMiddle          motor         14              
+// ClampSolenoid        digital_out   A               
+// IntakeRoller         motor         6               
+// Flywheel1            motor         12              
+// LeftMiddle           motor         20              
+// Flywheel2            motor         9               
+// Indexer              motor         10              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// LeftFront            motor         1               
+// RightFront           motor         2               
+// LeftBack             motor         3               
+// RightBack            motor         4               
+// RightLift            motor         5               
+// Inertial             inertial      21              
+// OldbackPiston        digital_out   D               
+// Sporklift            motor         19              
+// RightMiddle          motor         14              
+// ClampSolenoid        digital_out   A               
+// IntakeRoller         motor         6               
+// Flywheel1            motor         12              
+// LeftMiddle           motor         20              
+// Flywheel2            motor         9               
+// Indexer              motor         10              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// LeftFront            motor         1               
+// RightFront           motor         2               
+// LeftBack             motor         3               
+// RightBack            motor         4               
+// RightLift            motor         5               
+// Inertial             inertial      21              
+// OldbackPiston        digital_out   D               
+// Sporklift            motor         19              
+// RightMiddle          motor         14              
+// ClampSolenoid        digital_out   A               
+// IntakeRoller         motor         6               
+// Flywheel1            motor         11              
+// LeftMiddle           motor         20              
+// Flywheel2            motor         9               
+// Indexer              motor         10              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// LeftFront            motor         1               
+// RightFront           motor         2               
+// LeftBack             motor         3               
+// RightBack            motor         4               
+// RightLift            motor         5               
+// Inertial             inertial      21              
+// OldbackPiston        digital_out   D               
+// Sporklift            motor         19              
+// RightMiddle          motor         14              
+// ClampSolenoid        digital_out   A               
+// IntakeRoller         motor         6               
+// Flywheel1            motor         8               
+// LeftMiddle           motor         20              
+// Flywheel2            motor         9               
+// Indexer              motor         10              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// LeftFront            motor         1               
 // RightFront           motor         2               
 // LeftBack             motor         3               
 // RightBack            motor         4               
@@ -574,8 +714,8 @@ void intakeRollerMovement() {
 
 void flywheelMovement() {
   if(Controller1.ButtonY.pressing()){
-    Flywheel1.setVelocity(80, percent);
-    Flywheel2.setVelocity(80, percent);
+    Flywheel1.setVelocity(100, percent);
+    Flywheel2.setVelocity(100, percent);
     Flywheel1.spin(forward);
     Flywheel2.spin(reverse);
   }
@@ -765,19 +905,17 @@ void autonomous(void) {
       break;
     }
     case 1:{ //1 Roller Red
-      move(reverse, 100);
-      
-      IntakeRoller.setVelocity(10, percent);
-      IntakeRoller.spinFor(forward, 500, degrees, true);
+      IntakeRoller.setVelocity(100, percent);
+      IntakeRoller.spinFor(forward, 5000, degrees, false);
 
+      move(forward, 100);
       break;
     }
     case 2: { //1 Roller Blue
-      move(reverse, 100);
-      
-      IntakeRoller.setVelocity(10, percent);
-      IntakeRoller.spinFor(reverse, 500, degrees, true);
+      IntakeRoller.setVelocity(100, percent);
+      IntakeRoller.spinFor(reverse, 5000, degrees, false);
 
+      move(forward, 100);
       break;
     }
     case 3: { //Right Neutral AWP
