@@ -711,6 +711,23 @@ void intakeRollerMovement() {
     IntakeRoller.stop();
   }
 }
+/*double kP = 0.5;
+double kD = 0.2;
+void TwoMotorFly(double t){
+ double c = ((Flywheel1.voltage() + Flywheel2.voltage()) / 2);
+ double pe = 0;
+ while (t-c > 0){
+   double c = ((Flywheel1.voltage() + Flywheel2.voltage()) / 2);
+   double e = t - c;
+   double d = pe - e;
+   pe = e;
+   Flywheel1.spin(forward, e * kP + kD * d, volt);
+   Flywheel2.spin(forward, e * kP + kD * d, volt);
+ }
+ Flywheel2.stop();
+ Flywheel1.stop();
+ 
+}*/
 
 void flywheelMovement() {
   if(Controller1.ButtonY.pressing()){
@@ -726,6 +743,21 @@ void flywheelMovement() {
     Flywheel2.stop();
   }
 }
+
+/*void flywheelMovementSlow() {
+  if(Controller1.ButtonX.pressing()){
+    Flywheel1.setVelocity(65, percent);
+    Flywheel2.setVelocity(65, percent);
+    Flywheel1.spin(forward);
+    Flywheel2.spin(reverse);
+  }
+  else {
+    Flywheel1.setStopping(coast);
+    Flywheel2.setStopping(coast);
+    Flywheel1.stop();
+    Flywheel2.stop();
+  }f
+}*/
 
 void indexerMovement() {
   if(Controller1.ButtonL2.pressing()) {
@@ -1029,6 +1061,7 @@ void usercontrol(void) {
     armLift();
     intakeRollerMovement();
     flywheelMovement();
+    //flywheelMovementSlow();
     indexerMovement();
     sporkliftMovement();
     platformMode();
