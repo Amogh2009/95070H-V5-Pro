@@ -291,8 +291,8 @@ void TwoMotorFly(double t){
 
 void flywheelMovement() {
   if(Controller1.ButtonY.pressing()){
-    Flywheel1.setVelocity(100, percent);
-    Flywheel2.setVelocity(100, percent);
+    Flywheel1.setVelocity(79, percent);
+    Flywheel2.setVelocity(79, percent);
     Flywheel1.spin(forward);
     Flywheel2.spin(reverse);
   }
@@ -437,7 +437,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "1 Roller Red", "1 Roller Blue", "AWP Right", "2 Goal Right", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "AWP Right", "2 Goal Right", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -496,18 +496,32 @@ void autonomous(void) {
     case 0:{ //Disabled
       break;
     }
-    case 1:{ //1 Roller Red
+    case 1:{ //1 Roller
       IntakeRoller.setVelocity(100, percent);
       IntakeRoller.spinFor(forward, 5000, degrees, false);
 
-      move(forward, 100);
+      move(forward, 50);
+
+      move(reverse, 75);
       break;
     }
-    case 2: { //1 Roller Blue
+    case 2: { //1 Roller + Low Goal
       IntakeRoller.setVelocity(100, percent);
-      IntakeRoller.spinFor(reverse, 5000, degrees, false);
+      IntakeRoller.spinFor(forward, 5000, degrees, false);
 
-      move(forward, 100);
+      move(forward, 50);
+
+      move(reverse, 75);
+
+      turn(::left, 250);
+
+      Indexer.setVelocity(100, pct);
+      Flywheel1.setVelocity(69, pct);
+      Flywheel2.setVelocity(69, pct);
+
+      wait(2000, msec);
+
+      Indexer.spinFor(forward, 300, degrees, true);
       break;
     }
     case 3: { //Right Neutral AWP
