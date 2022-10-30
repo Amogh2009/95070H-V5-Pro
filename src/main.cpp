@@ -153,6 +153,7 @@ void turn(turntype direction, int rotation) {
   LeftBack.spinFor(direction ? reverse : forward, rotation, degrees, false);
   RightFront.spinFor(direction ? forward : reverse, rotation, degrees, false);
   RightBack.spinFor(direction ? forward : reverse, rotation, degrees, true);
+  Controller1.rumble("..");
 }
 
 void move(vex::directionType direction, int rotation) {
@@ -251,6 +252,23 @@ void armLift(){
   }
 }
 
+void TempBattery () {
+  Controller1.Screen.setCursor(1, 1);
+  Controller1.Screen.print("Motor Temps (%)");
+  Controller1.Screen.newLine();
+  Controller1.Screen.print(LeftBack.temperature(percent));
+  Controller1.Screen.print(",");
+  Controller1.Screen.print(LeftFront.temperature(percent));
+  Controller1.Screen.print(",");
+  Controller1.Screen.print(RightBack.temperature(percent));
+  Controller1.Screen.print(",");
+  Controller1.Screen.print(RightFront.temperature(percent));
+  Controller1.Screen.print(",");
+  Controller1.Screen.newLine();
+  Controller1.Screen.print("Battery: ");
+  Controller1.Screen.print(vexBatteryCapacityGet());
+}
+
 void intakeRollerMovement() {
   if(Controller1.ButtonR1.pressing()){
     /*Clamp.setVelocity(200,percent);
@@ -289,35 +307,31 @@ void TwoMotorFly(double t){
  
 }*/
 
+void flywheelSpin(int velocity) {
+  Flywheel1.setVelocity(velocity, pct);
+  Flywheel2.setVelocity(velocity, pct);
+  Flywheel1.spin(fwd);
+  Flywheel2.spin(reverse);
+}
+
 void flywheelMovement() {
-  if(Controller1.ButtonY.pressing()){
-    Flywheel1.setVelocity(79, percent);
-    Flywheel2.setVelocity(79, percent);
+  if(Controller1.ButtonY.pressing()){ // fast shooter
+    Flywheel1.setVelocity(80, percent);
+    Flywheel2.setVelocity(80, percent);
     Flywheel1.spin(forward);
     Flywheel2.spin(reverse);
-  }
-  else {
+  } else if(Controller1.ButtonX.pressing()){ // slow shooter
+    Flywheel1.setVelocity(65, percent);
+    Flywheel2.setVelocity(65, percent);
+    Flywheel1.spin(forward);
+    Flywheel2.spin(reverse);
+  } else {
     Flywheel1.setStopping(coast);
     Flywheel2.setStopping(coast);
     Flywheel1.stop();
     Flywheel2.stop();
   }
 }
-
-/*void flywheelMovementSlow() {
-  if(Controller1.ButtonX.pressing()){
-    Flywheel1.setVelocity(65, percent);
-    Flywheel2.setVelocity(65, percent);
-    Flywheel1.spin(forward);
-    Flywheel2.spin(reverse);
-  }
-  else {
-    Flywheel1.setStopping(coast);
-    Flywheel2.setStopping(coast);
-    Flywheel1.stop();
-    Flywheel2.stop();
-  }f
-}*/
 
 void indexerMovement() {
   if(Controller1.ButtonL2.pressing()) {
@@ -498,7 +512,7 @@ void autonomous(void) {
     }
     case 1:{ //1 Roller
       IntakeRoller.setVelocity(100, percent);
-      IntakeRoller.spinFor(forward, 5000, degrees, false);
+      IntakeRoller.spinFor(reverse, 5000, degrees, false);
 
       move(forward, 50);
 
@@ -507,22 +521,19 @@ void autonomous(void) {
     }
     case 2: { //1 Roller + Low Goal
       IntakeRoller.setVelocity(100, percent);
-      IntakeRoller.spinFor(forward, 5000, degrees, false);
+      IntakeRoller.spinFor(reverse, 1000, degrees, false);
 
       move(forward, 50);
 
       move(reverse, 75);
 
       turn(::left, 250);
-
-      Indexer.setVelocity(100, pct);
-      Flywheel1.setVelocity(69, pct);
-      Flywheel2.setVelocity(69, pct);
+      
+      flywheelSpin(65);
 
       wait(2000, msec);
 
-      Indexer.spinFor(forward, 300, degrees, true);
-      break;
+      Indexer.spinFor(reverse, 300, degrees);
     }
     case 3: { //Right Neutral AWP
       setStopping(coast);
@@ -581,20 +592,8 @@ void autonomous(void) {
       break; 
     }
     case 4: { //Right Mid
-      setStopping(coast);
-      setVelocity(100);
-      RightLift.spinFor(reverse, 50, degrees, false);
-      if (elevated) {
-        move(forward, x + 410);
-      } else {
-        move(forward, x + 430);
-      }
-      
-      wait(100, msec);
-
-      ClampSolenoid.set(true);
-      
-      move(reverse, x + 230);
+      Flywheel1.spinFor(fwd,5,turns);
+      Flywheel2.spinFor(reverse,5,turns);
       break;
     }
     case 5: { //AWP Carry from Left
@@ -633,9 +632,9 @@ void usercontrol(void) {
   while (1) {
     simpleDrive();
     armLift();
+    TempBattery();
     intakeRollerMovement();
     flywheelMovement();
-    //flywheelMovementSlow();
     indexerMovement();
     sporkliftMovement();
     platformMode();
