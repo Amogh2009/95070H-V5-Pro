@@ -148,12 +148,11 @@ const turntype left = 1;
 const turntype right = 0;
 
 
-void turn(turntype direction, int rotation) {
+void botTurn(turntype direction, int rotation) {
   LeftFront.spinFor(direction ? reverse : forward, rotation, degrees, false);
   LeftBack.spinFor(direction ? reverse : forward, rotation, degrees, false);
   RightFront.spinFor(direction ? forward : reverse, rotation, degrees, false);
   RightBack.spinFor(direction ? forward : reverse, rotation, degrees, true);
-  Controller1.rumble("..");
 }
 
 void move(vex::directionType direction, int rotation) {
@@ -253,6 +252,8 @@ void armLift(){
 }
 
 void TempBattery () {
+  wait(30000, msec);
+  
   Controller1.Screen.setCursor(1, 1);
   Controller1.Screen.print("Motor Temps (%)");
   Controller1.Screen.newLine();
@@ -318,11 +319,6 @@ void flywheelMovement() {
   if(Controller1.ButtonY.pressing()){ // fast shooter
     Flywheel1.setVelocity(80, percent);
     Flywheel2.setVelocity(80, percent);
-    Flywheel1.spin(forward);
-    Flywheel2.spin(reverse);
-  } else if(Controller1.ButtonX.pressing()){ // slow shooter
-    Flywheel1.setVelocity(65, percent);
-    Flywheel2.setVelocity(65, percent);
     Flywheel1.spin(forward);
     Flywheel2.spin(reverse);
   } else {
@@ -527,13 +523,15 @@ void autonomous(void) {
 
       move(reverse, 75);
 
-      turn(::left, 250);
-      
       flywheelSpin(65);
 
-      wait(2000, msec);
+      wait(2500, msec);
 
-      Indexer.spinFor(reverse, 300, degrees);
+      Indexer.setVelocity(5, pct);
+      Indexer.spinFor(fwd, 300, deg, false);
+
+      botTurn(::left, 315);
+      break;
     }
     case 3: { //Right Neutral AWP
       setStopping(coast);
@@ -559,7 +557,7 @@ void autonomous(void) {
 
       // turning 90°
       
-      turn(::left, 250);
+      botTurn(::left, 250);
 
       // moving backwards to place ring in alliance goal
       
@@ -599,6 +597,7 @@ void autonomous(void) {
     case 5: { //AWP Carry from Left
       moveDrivetrain(100, 200, true, true);
       ClampSolenoid.set(true);
+      break;
     }
   }
 }
@@ -632,7 +631,7 @@ void usercontrol(void) {
   while (1) {
     simpleDrive();
     armLift();
-    TempBattery();
+    //TempBattery();
     intakeRollerMovement();
     flywheelMovement();
     indexerMovement();
