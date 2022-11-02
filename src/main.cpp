@@ -13,7 +13,7 @@
 // Controller1          controller                    
 // LeftFront            motor         1               
 // RightFront           motor         13              
-// LeftBack             motor         15              
+// LeftBack             motor         17              
 // RightBack            motor         11              
 // RightLift            motor         5               
 // Inertial             inertial      21              
@@ -229,7 +229,6 @@ void platformMode() {
 void simpleDrive(){
   double forwardAmount = Controller1.Axis3.position();
   double turnAmount = Controller1.Axis1.position(); //Axis 4 for unified joystick
-  
   RightFront.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   RightBack.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   LeftFront.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
@@ -467,7 +466,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "AWP Right", "2 Goal Right", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "AWP Right", "Turning Test", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -609,9 +608,9 @@ void autonomous(void) {
       
       break; 
     }
-    case 4: { //Right Mid
-      Flywheel1.spinFor(fwd,5,turns);
-      Flywheel2.spinFor(reverse,5,turns);
+    case 4: { //Turning Test
+      botTurn(::left, 90);
+      botTurn(::right, 90);
       break;
     }
     case 5: { //AWP Carry from Left

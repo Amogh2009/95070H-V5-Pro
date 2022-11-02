@@ -11,7 +11,7 @@ brain  Brain;
 controller Controller1 = controller(primary);
 motor LeftFront = motor(PORT4, ratio18_1, true);
 motor RightFront = motor(PORT13, ratio18_1, false);
-motor LeftBack = motor(PORT15, ratio18_1, true);
+motor LeftBack = motor(PORT17, ratio18_1, true);
 motor RightBack = motor(PORT11, ratio18_1, false);
 motor RightLift = motor(PORT5, ratio18_1, false);
 inertial Inertial = inertial(PORT21);
