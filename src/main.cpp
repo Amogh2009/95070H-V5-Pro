@@ -183,7 +183,7 @@ void platformMode() {
   }
 }
 
-void goSlow(){
+/*void goSlow(){
   if(Controller1.ButtonX.pressing()){
     LeftBack.spin(forward, 50, percent);
     RightBack.spin(forward, 50, percent);
@@ -224,7 +224,7 @@ void goSlow(){
     LeftMiddle.stop(hold);
     RightMiddle.stop(hold);
   }
-}
+} */
 
 void simpleDrive(){
   double forwardAmount = Controller1.Axis3.position();
@@ -315,10 +315,14 @@ void flywheelSpin(int velocity) {
   Flywheel2.spin(reverse);
 }
 
-void flywheelMovement() {
-  if(Controller1.ButtonY.pressing()){ // fast shooter
-    Flywheel1.setVelocity(80, percent);
-    Flywheel2.setVelocity(80, percent);
+bool flywheelStart = false;
+int flywheelVelocity = 80;
+
+void flywheelRun() {
+  flywheelStart = !flywheelStart;
+  if(flywheelStart){ // fast shooter
+    Flywheel1.setVelocity(flywheelVelocity, percent);
+    Flywheel2.setVelocity(flywheelVelocity, percent);
     Flywheel1.spin(forward);
     Flywheel2.spin(reverse);
   } else {
@@ -327,6 +331,21 @@ void flywheelMovement() {
     Flywheel1.stop();
     Flywheel2.stop();
   }
+}
+
+void flywheelSlow() {
+    flywheelVelocity = 65;
+    flywheelRun();
+}
+
+void flywheelFast() {
+    flywheelVelocity = 80;
+    flywheelRun();
+}
+
+void flywheelMovement() {
+    Controller1.ButtonY.pressed(flywheelFast);
+    Controller1.ButtonX.pressed(flywheelSlow);
 }
 
 void indexerMovement() {
@@ -629,22 +648,22 @@ void sporkliftMovement() {
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
  // User control code here, inside the loop
+  flywheelMovement();
   while (1) {
     simpleDrive();
     armLift();
     //TempBattery();
     intakeRollerMovement();
-    flywheelMovement();
     indexerMovement();
     sporkliftMovement();
     platformMode();
-    if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
+    /*if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
       RightLift.stop(hold);
       while((Controller1.ButtonY.pressing() && Controller1.ButtonA.pressing()) == false){
-        goSlow();
+        //goSlow();
         wait(10, msec);
       }
-    }
+    }*/
     wait(15, msec);
   } // Sleep the task for a short amount of time to prevent wasted resources.
 }
