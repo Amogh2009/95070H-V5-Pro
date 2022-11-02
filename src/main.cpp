@@ -330,11 +330,12 @@ void flywheelMovement() {
 }
 
 void indexerMovement() {
-  if(Controller1.ButtonL2.pressing()) {
+  if(Controller1.ButtonL1.pressing()) {
     Indexer.setVelocity(100, percent);
-    Indexer.spin(forward);
+    Indexer.spinFor(forward, 200, degrees, true);
+    Indexer.spinFor(reverse, 200, degrees, true);
   }
-  else if (Controller1.ButtonL1.pressing()) {
+  else if (Controller1.ButtonL2.pressing()) {
     Indexer.setVelocity(100,percent);
     Indexer.spin(reverse);
   }
