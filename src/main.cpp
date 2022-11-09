@@ -250,6 +250,75 @@ void armLift(){
   }
 }
 
+bool Controller1XY = true;
+
+double fly_kp = 0.1; // how fast it increases
+double fly_ki = 0.3; // how much offshoot/range of fluctuation
+double fly_kd = 0.00005; // how many fluctuations are there
+double speed_margin = 0;
+double speed_marg_pct = 5;
+bool flyescvar = false;
+int speed_volt = 0;
+
+//flywheel spin
+
+void flywheel_spin_fwd(double flywheel_target_speed_pct) {
+  
+  Flywheel1.setVelocity(flywheel_target_speed_pct, pct);
+  Flywheel2.setVelocity(flywheel_target_speed_pct, pct);
+  Flywheel1.spin(directionType::fwd);
+  Flywheel2.spin(directionType::rev);
+}
+
+//flywheel spin PID code
+void flywheel_spin_fwd_PID(double flywheel_target_speed_pct){
+double averagevolt = 0;
+double preverror = 0;
+double errorsum = 0;
+double error = 0;
+double derivitive = 0;
+double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
+Controller1.Screen.setCursor(3,1);
+Controller1.Screen.print("            ");
+wait(20,msec);
+ 
+ while (flyescvar == false) {
+  averagevolt = ((Flywheel1.voltage() + Flywheel2.voltage()) / 2);
+  //averagevolt = ((flywheelMotorA.velocity(velocityUnits::pct) + flywheelMotorB.velocity(velocityUnits::pct) ) / 2);
+  error = flywheel_target_speed_volt - averagevolt;
+  derivitive = preverror - error;
+  errorsum += error;
+  preverror = error;
+  speed_margin = fabs((error/flywheel_target_speed_volt) * 100);
+  speed_volt =  error * fly_kp + fly_ki * errorsum + fly_kd * derivitive;
+ 
+  Controller1.Screen.setCursor(3,1);
+  Controller1.Screen.print("C:%2.0fM:%2.0f", averagevolt,speed_margin);
+  wait(20,msec);
+ 
+  if(speed_margin <= speed_marg_pct) {
+     flyescvar = true;
+   } else {
+      //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
+      //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
+      Flywheel1.spin(forward, speed_volt, volt);
+      Flywheel2.spin(reverse, speed_volt, volt);
+   }
+  
+  wait(20, msec);
+ 
+ }
+ Controller1.Screen.setCursor(3,9);
+ Controller1.Screen.print("DONE");
+ wait(20,msec);
+ 
+ // Maintain the speed
+ //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
+ //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
+ Flywheel1.spin(forward, speed_volt, volt);
+ Flywheel2.spin(reverse, speed_volt, volt);
+}
+
 void TempBattery () {
   wait(30000, msec);
   
@@ -333,7 +402,7 @@ void flywheelRun() {
 }
 
 void flywheelSlow() {
-    flywheelVelocity = 65;
+    flywheelVelocity = 70;
     flywheelRun();
 }
 
@@ -651,6 +720,22 @@ void usercontrol(void) {
   while (1) {
     simpleDrive();
     armLift();
+    /*if (Controller1.ButtonY.pressing()) {
+       //flywheel_spin_fwd();
+       flywheel_spin_fwd_PID(80);
+       Controller1XY = false;
+     } else if (Controller1.ButtonX.pressing()) {
+       //flywheel.spin(reverse);
+       flywheel_spin_fwd_PID(0);
+       Controller1XY = false;
+     } else if (!Controller1XY) {
+       flyescvar = true;
+       speed_volt = 0;
+       wait(20,msec);
+       Flywheel1.stop();
+       Flywheel2.stop();
+       flyescvar = false;
+     }*/
     //TempBattery();
     intakeRollerMovement();
     indexerMovement();
@@ -666,7 +751,6 @@ void usercontrol(void) {
     wait(15, msec);
   } // Sleep the task for a short amount of time to prevent wasted resources.
 }
-
 int main() {
  // Set up callbacks for autonomous and driver control periods.
  Competition.autonomous(autonomous);
@@ -677,3 +761,4 @@ int main() {
    wait(100, msec);
  }
 }
+
