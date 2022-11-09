@@ -277,37 +277,38 @@ double preverror = 0;
 double errorsum = 0;
 double error = 0;
 double derivitive = 0;
+int iterations = 0;
 double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
 Controller1.Screen.setCursor(3,1);
 Controller1.Screen.print("            ");
 wait(20,msec);
  
  while (flyescvar == false) {
-  averagevolt = ((Flywheel1.voltage() + Flywheel2.voltage()) / 2);
-  //averagevolt = ((flywheelMotorA.velocity(velocityUnits::pct) + flywheelMotorB.velocity(velocityUnits::pct) ) / 2);
-  error = flywheel_target_speed_volt - averagevolt;
-  derivitive = preverror - error;
-  errorsum += error;
-  preverror = error;
-  speed_margin = fabs((error/flywheel_target_speed_volt) * 100);
-  speed_volt =  error * fly_kp + fly_ki * errorsum + fly_kd * derivitive;
- 
-  Controller1.Screen.setCursor(3,1);
-  Controller1.Screen.print("C:%2.0fM:%2.0f", averagevolt,speed_margin);
-  wait(20,msec);
- 
-  if(speed_margin <= speed_marg_pct) {
-     flyescvar = true;
-   } else {
-      //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
-      //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
-      Flywheel1.spin(forward, speed_volt, volt);
-      Flywheel2.spin(reverse, speed_volt, volt);
-   }
+   iterations++;
+    averagevolt = ((Flywheel1.voltage() - Flywheel2.voltage()) / 2);
+    //averagevolt = ((flywheelMotorA.velocity(velocityUnits::pct) + flywheelMotorB.velocity(velocityUnits::pct) ) / 2);
+    error = flywheel_target_speed_volt - averagevolt;
+    derivitive = preverror - error;
+    errorsum += error;
+    preverror = error;
+    speed_margin = fabs((error/flywheel_target_speed_volt) * 100);
+    speed_volt =  error * fly_kp + fly_ki * errorsum + fly_kd * derivitive;
   
-  wait(20, msec);
- 
- }
+    Controller1.Screen.setCursor(1,1);
+    Controller1.Screen.print("C:%2.1fM:%2.0f", averagevolt,speed_margin);
+    wait(20,msec);
+  
+    if(speed_margin <= speed_marg_pct) {
+      flyescvar = true;
+    } else {
+        //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
+        //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
+        Flywheel1.spin(forward, speed_volt, volt);
+        Flywheel2.spin(reverse, speed_volt, volt);
+    }
+    
+    wait(20, msec);
+  }
  Controller1.Screen.setCursor(3,9);
  Controller1.Screen.print("DONE");
  wait(20,msec);
@@ -716,17 +717,17 @@ void sporkliftMovement() {
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
  // User control code here, inside the loop
-  flywheelMovement();
+  //flywheelMovement();
   while (1) {
     simpleDrive();
     armLift();
-    /*if (Controller1.ButtonY.pressing()) {
+    if (Controller1.ButtonY.pressing()) {
        //flywheel_spin_fwd();
        flywheel_spin_fwd_PID(80);
        Controller1XY = false;
      } else if (Controller1.ButtonX.pressing()) {
        //flywheel.spin(reverse);
-       flywheel_spin_fwd_PID(0);
+       flywheel_spin_fwd_PID(65);
        Controller1XY = false;
      } else if (!Controller1XY) {
        flyescvar = true;
@@ -735,7 +736,7 @@ void usercontrol(void) {
        Flywheel1.stop();
        Flywheel2.stop();
        flyescvar = false;
-     }*/
+     }
     //TempBattery();
     intakeRollerMovement();
     indexerMovement();
