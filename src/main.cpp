@@ -279,7 +279,7 @@ double error = 0;
 double derivitive = 0;
 int iterations = 0;
 double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
-Controller1.Screen.setCursor(3,1);
+Controller1.Screen.setCursor(1,1);
 Controller1.Screen.print("            ");
 wait(20,msec);
  
@@ -412,9 +412,37 @@ void flywheelFast() {
     flywheelRun();
 }
 
+void flywheelPIDFast(){
+  flywheelStart = !flywheelStart;
+  if(flywheelStart) {
+    flywheel_spin_fwd_PID(80);
+  } else {
+    Flywheel1.setStopping(coast);
+    Flywheel2.setStopping(coast);
+    Flywheel1.stop();
+    Flywheel2.stop();
+  }
+}
+
+void flywheelPIDSlow() {
+  flywheelStart = !flywheelStart;
+  if(flywheelStart) {
+    flywheel_spin_fwd_PID(65);
+  } else {
+    Flywheel1.setStopping(coast);
+    Flywheel2.setStopping(coast);
+    Flywheel1.stop();
+    Flywheel2.stop();
+  }
+}
+
 void flywheelMovement() {
+    /*
     Controller1.ButtonY.pressed(flywheelFast);
     Controller1.ButtonX.pressed(flywheelSlow);
+    */
+    Controller1.ButtonY.pressed(flywheelPIDFast);
+    Controller1.ButtonX.pressed(flywheelPIDSlow);
 }
 
 void indexerMovement() {
@@ -717,10 +745,11 @@ void sporkliftMovement() {
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
  // User control code here, inside the loop
-  //flywheelMovement();
+  flywheelMovement();
   while (1) {
     simpleDrive();
     armLift();
+    /*
     if (Controller1.ButtonY.pressing()) {
        //flywheel_spin_fwd();
        flywheel_spin_fwd_PID(80);
@@ -737,6 +766,7 @@ void usercontrol(void) {
        Flywheel2.stop();
        flyescvar = false;
      }
+     */
     //TempBattery();
     intakeRollerMovement();
     indexerMovement();
