@@ -256,7 +256,7 @@ double fly_kp = 0.1; // how fast it increases
 double fly_ki = 0.3; // how much offshoot/range of fluctuation
 double fly_kd = 0.00005; // how many fluctuations are there
 double speed_margin = 0;
-double speed_marg_pct = 5;
+double speed_marg_pct = 2;
 bool flyescvar = false;
 int speed_volt = 0;
 
@@ -272,27 +272,26 @@ void flywheel_spin_fwd(double flywheel_target_speed_pct) {
 
 //flywheel spin PID code
 void flywheel_spin_fwd_PID(double flywheel_target_speed_pct){
+  //speed_volt = 0;
 double averagevolt = 0;
 double preverror = 0;
 double errorsum = 0;
 double error = 0;
-double derivitive = 0;
-int iterations = 0;
+double derivative = 0;
 double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
 Controller1.Screen.setCursor(1,1);
-Controller1.Screen.print("            ");
+Controller1.Screen.print("         ");
 wait(20,msec);
  
  while (flyescvar == false) {
-   iterations++;
     averagevolt = ((Flywheel1.voltage() - Flywheel2.voltage()) / 2);
     //averagevolt = ((flywheelMotorA.velocity(velocityUnits::pct) + flywheelMotorB.velocity(velocityUnits::pct) ) / 2);
     error = flywheel_target_speed_volt - averagevolt;
-    derivitive = preverror - error;
+    derivative = preverror - error;
     errorsum += error;
     preverror = error;
     speed_margin = fabs((error/flywheel_target_speed_volt) * 100);
-    speed_volt =  error * fly_kp + fly_ki * errorsum + fly_kd * derivitive;
+    speed_volt =  error * fly_kp + fly_ki * errorsum + fly_kd * derivative;
   
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("C:%2.1fM:%2.0f", averagevolt,speed_margin);
@@ -415,24 +414,30 @@ void flywheelFast() {
 void flywheelPIDFast(){
   flywheelStart = !flywheelStart;
   if(flywheelStart) {
-    flywheel_spin_fwd_PID(80);
+    flywheel_spin_fwd_PID(70);
   } else {
     Flywheel1.setStopping(coast);
     Flywheel2.setStopping(coast);
-    Flywheel1.stop();
-    Flywheel2.stop();
+    Flywheel1.spin(forward, 0, volt);
+    Flywheel2.spin(reverse, 0, volt);
+    flyescvar = false;
+    //Flywheel1.stop();
+    //Flywheel2.stop();
   }
 }
 
 void flywheelPIDSlow() {
   flywheelStart = !flywheelStart;
   if(flywheelStart) {
-    flywheel_spin_fwd_PID(65);
+    flywheel_spin_fwd_PID(34);
   } else {
     Flywheel1.setStopping(coast);
     Flywheel2.setStopping(coast);
-    Flywheel1.stop();
-    Flywheel2.stop();
+    Flywheel1.spin(forward, 0, volt);
+    Flywheel2.spin(reverse, 0, volt);
+    flyescvar = false;
+    //Flywheel1.stop();
+    //Flywheel2.stop();
   }
 }
 
@@ -752,11 +757,11 @@ void usercontrol(void) {
     /*
     if (Controller1.ButtonY.pressing()) {
        //flywheel_spin_fwd();
-       flywheel_spin_fwd_PID(80);
+       flywheel_spin_fwd_PID(70);
        Controller1XY = false;
      } else if (Controller1.ButtonX.pressing()) {
        //flywheel.spin(reverse);
-       flywheel_spin_fwd_PID(65);
+       flywheel_spin_fwd_PID(35);
        Controller1XY = false;
      } else if (!Controller1XY) {
        flyescvar = true;
