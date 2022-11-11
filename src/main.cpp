@@ -414,7 +414,7 @@ void flywheelFast() {
 void flywheelPIDFast(){
   flywheelStart = !flywheelStart;
   if(flywheelStart) {
-    flywheel_spin_fwd_PID(70);
+    flywheel_spin_fwd_PID(69);
   } else {
     Flywheel1.setStopping(coast);
     Flywheel2.setStopping(coast);
@@ -429,7 +429,7 @@ void flywheelPIDFast(){
 void flywheelPIDSlow() {
   flywheelStart = !flywheelStart;
   if(flywheelStart) {
-    flywheel_spin_fwd_PID(34);
+    flywheel_spin_fwd_PID(57);
   } else {
     Flywheel1.setStopping(coast);
     Flywheel2.setStopping(coast);
@@ -446,15 +446,15 @@ void flywheelMovement() {
     Controller1.ButtonY.pressed(flywheelFast);
     Controller1.ButtonX.pressed(flywheelSlow);
     */
-    Controller1.ButtonY.pressed(flywheelPIDFast);
-    Controller1.ButtonX.pressed(flywheelPIDSlow);
+    Controller1.ButtonY.pressed(flywheelFast);
+    Controller1.ButtonX.pressed(flywheelSlow);
 }
 
 void indexerMovement() {
   if(Controller1.ButtonL1.pressing()) {
     Indexer.setVelocity(100, percent);
-    Indexer.spinFor(forward, 100, degrees, true);
-    Indexer.spinFor(reverse, 100, degrees, true);
+    Indexer.spinFor(forward, 115, degrees, true);
+    Indexer.spinFor(reverse, 115, degrees, true);
   }
   else if (Controller1.ButtonL2.pressing()) {
     Indexer.setVelocity(100,percent);
@@ -750,7 +750,6 @@ void sporkliftMovement() {
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
  // User control code here, inside the loop
-  flywheelMovement();
   while (1) {
     simpleDrive();
     armLift();
@@ -774,6 +773,7 @@ void usercontrol(void) {
      */
     //TempBattery();
     intakeRollerMovement();
+    flywheelMovement();
     indexerMovement();
     sporkliftMovement();
     platformMode();
