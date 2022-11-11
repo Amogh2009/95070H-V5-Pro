@@ -17,7 +17,7 @@
 // RightBack            motor         11              
 // RightLift            motor         5               
 // Inertial             inertial      21              
-// OldbackPiston        digital_out   D               
+// Expansion            digital_out   D               
 // Sporklift            motor         19              
 // RightMiddle          motor         14              
 // ClampSolenoid        digital_out   A               
@@ -319,7 +319,15 @@ wait(20,msec);
  Flywheel2.spin(reverse, speed_volt, volt);
 }
 
-void TempBattery () {
+void expansionMovement(void) {
+  if(Controller1.ButtonB.pressing()) {
+    Expansion.set(true);
+  } else {
+    Expansion.set(false);
+  }
+}
+
+void TempBattery() {
   wait(30000, msec);
   
   Controller1.Screen.setCursor(1, 1);
@@ -789,6 +797,7 @@ void usercontrol(void) {
     armLift();
     //TempBattery();
     intakeRollerMovement();
+    expansionMovement();
     flywheelMovement();
     indexerMovement();
     sporkliftMovement();

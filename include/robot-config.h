@@ -10,7 +10,7 @@ extern motor LeftBack;
 extern motor RightBack;
 extern motor RightLift;
 extern inertial Inertial;
-extern digital_out OldbackPiston;
+extern digital_out Expansion;
 extern motor Sporklift;
 extern motor RightMiddle;
 extern digital_out ClampSolenoid;
