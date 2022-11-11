@@ -448,17 +448,40 @@ void flywheelMovement() {
     */
     /*Controller1.ButtonY.pressed(flywheelFast);
     Controller1.ButtonX.pressed(flywheelSlow);*/
+    if (Controller1.ButtonY.pressing()) {
+       flywheel_spin_fwd_PID(70);
+       Controller1XY = false;
+     } else if (Controller1.ButtonX.pressing()) {
+       flywheel_spin_fwd_PID(35);
+       Controller1XY = false;
+     } else if (!Controller1XY) {
+       flyescvar = true;
+       speed_volt = 0;
+       wait(20,msec);
+       Flywheel1.stop();
+       Flywheel2.stop();
+       flyescvar = false;
+     }
+     /*
     if(Controller1.ButtonY.pressing()){
+      Flywheel1.setVelocity(80, pct);
+      Flywheel2.setVelocity(80, pct);
+      Flywheel1.spin(forward);
+      Flywheel2.spin(reverse);
+      Controller1XY = false;
+    } else if(Controller1.ButtonX.pressing()) {
       Flywheel1.setVelocity(70, pct);
       Flywheel2.setVelocity(70, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);
-    } else {
+      Controller1XY = false;
+    } else if(!Controller1XY) {
       Flywheel1.setStopping(coast);
       Flywheel2.setStopping(coast);
       Flywheel1.stop();
       Flywheel2.stop();
     }
+    */
 }
 
 void indexerMovement() {
@@ -764,24 +787,6 @@ void usercontrol(void) {
   while (1) {
     simpleDrive();
     armLift();
-    /*
-    if (Controller1.ButtonY.pressing()) {
-       //flywheel_spin_fwd();
-       flywheel_spin_fwd_PID(70);
-       Controller1XY = false;
-     } else if (Controller1.ButtonX.pressing()) {
-       //flywheel.spin(reverse);
-       flywheel_spin_fwd_PID(35);
-       Controller1XY = false;
-     } else if (!Controller1XY) {
-       flyescvar = true;
-       speed_volt = 0;
-       wait(20,msec);
-       Flywheel1.stop();
-       Flywheel2.stop();
-       flyescvar = false;
-     }
-     */
     //TempBattery();
     intakeRollerMovement();
     flywheelMovement();
