@@ -446,8 +446,19 @@ void flywheelMovement() {
     Controller1.ButtonY.pressed(flywheelFast);
     Controller1.ButtonX.pressed(flywheelSlow);
     */
-    Controller1.ButtonY.pressed(flywheelFast);
-    Controller1.ButtonX.pressed(flywheelSlow);
+    /*Controller1.ButtonY.pressed(flywheelFast);
+    Controller1.ButtonX.pressed(flywheelSlow);*/
+    if(Controller1.ButtonY.pressing()){
+      Flywheel1.setVelocity(70, pct);
+      Flywheel2.setVelocity(70, pct);
+      Flywheel1.spin(forward);
+      Flywheel2.spin(reverse);
+    } else {
+      Flywheel1.setStopping(coast);
+      Flywheel2.setStopping(coast);
+      Flywheel1.stop();
+      Flywheel2.stop();
+    }
 }
 
 void indexerMovement() {
