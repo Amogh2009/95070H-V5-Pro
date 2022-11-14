@@ -8,15 +8,10 @@ extern motor LeftFront;
 extern motor RightFront;
 extern motor LeftBack;
 extern motor RightBack;
-extern motor RightLift;
 extern inertial Inertial;
 extern digital_out Expansion;
-extern motor Sporklift;
-extern motor RightMiddle;
-extern digital_out ClampSolenoid;
 extern motor IntakeRoller;
 extern motor Flywheel1;
-extern motor LeftMiddle;
 extern motor Flywheel2;
 extern motor Indexer;
 

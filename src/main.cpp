@@ -14,16 +14,11 @@
 // LeftFront            motor         1               
 // RightFront           motor         13              
 // LeftBack             motor         17              
-// RightBack            motor         11              
-// RightLift            motor         5               
+// RightBack            motor         11             
 // Inertial             inertial      21              
 // Expansion            digital_out   D               
-// Sporklift            motor         19              
-// RightMiddle          motor         14              
-// ClampSolenoid        digital_out   A               
 // IntakeRoller         motor         6               
-// Flywheel1            motor         12              
-// LeftMiddle           motor         20              
+// Flywheel1            motor         12             
 // Flywheel2            motor         9               
 // Indexer              motor         10              
 // ---- END VEXCODE CONFIGURED DEVICES ----
@@ -74,8 +69,6 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
     RightBack.spin(forward);
     LeftFront.spin(forward);
     RightFront.spin(forward);
-    LeftMiddle.spin(forward);
-    RightMiddle.spin(forward);
     double SensorValue = LeftBack.position(turns)*3.25*5/3*M_PI;
     error = target - SensorValue;
     integral = integral + error;
@@ -94,32 +87,24 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
       RightBack.setVelocity(getSign(total)*maximumSpeed + 0.5*amountOff, percent);
       LeftFront.setVelocity(getSign(total)*maximumSpeed - 0.5*amountOff, percent);
       RightFront.setVelocity(getSign(total)*maximumSpeed + 0.5*amountOff, percent);
-      LeftMiddle.setVelocity(getSign(total)*maximumSpeed + 0.5*amountOff, percent);
-      RightMiddle.setVelocity(getSign(total)*maximumSpeed + 0.5*amountOff, percent);
     }
     else if(fabs(total) < fabs(minimumSpeed)){
       LeftBack.setVelocity(getSign(total)*minimumSpeed - 0.5*amountOff, percent);
       RightBack.setVelocity(getSign(total)*minimumSpeed + 0.5*amountOff, percent);
       LeftFront.setVelocity(getSign(total)*minimumSpeed - 0.5*amountOff, percent);
       RightFront.setVelocity(getSign(total)*minimumSpeed + 0.5*amountOff, percent);
-      LeftMiddle.setVelocity(getSign(total)*minimumSpeed + 0.5*amountOff, percent);
-      RightMiddle.setVelocity(getSign(total)*minimumSpeed + 0.5*amountOff, percent);
     }
     else{
       LeftBack.setVelocity(total - 0.5*amountOff, percent);
       RightBack.setVelocity(total + 0.5*amountOff, percent);
       LeftFront.setVelocity(total - 0.5*amountOff, percent);
       RightFront.setVelocity(total + 0.5*amountOff,percent);
-      LeftMiddle.setVelocity(total + 0.5*amountOff,percent);
-      RightMiddle.setVelocity(total + 0.5*amountOff,percent);
     }
   }
   LeftBack.stop(brake);
   RightBack.stop(brake);
   RightFront.stop(brake);
   LeftFront.stop(brake);
-  RightMiddle.stop(brake);
-  LeftMiddle.stop(brake);
 }
 //Void that controls the drivetrain based on inputs from the joysticks
 
@@ -128,19 +113,15 @@ int speedFactor = 1;
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
   LeftBack.setStopping(stoppingType);
-  LeftMiddle.setStopping(stoppingType);
   RightFront.setStopping(stoppingType);
   RightBack.setStopping(stoppingType);
-  RightMiddle.setStopping(stoppingType);
 }
 
 void setVelocity(int velocity) {
   LeftFront.setVelocity(velocity, percent);
   LeftBack.setVelocity(velocity, percent);
-  LeftMiddle.setVelocity(velocity, percent);
   RightFront.setVelocity(velocity, percent);
   RightBack.setVelocity(velocity, percent);
-  RightMiddle.setVelocity(velocity, percent);
 }
 
 typedef int turntype;
@@ -169,8 +150,6 @@ void platformMode() {
     LeftBack.setStopping(hold);
     RightFront.setStopping(hold);
     RightBack.setStopping(hold);
-    RightMiddle.setStopping(hold);
-    LeftMiddle.setStopping(hold);
   }
   else {
     speedFactor = 1;
@@ -178,53 +157,8 @@ void platformMode() {
     LeftBack.setStopping(coast);
     RightFront.setStopping(coast);
     RightBack.setStopping(coast);
-    RightMiddle.setStopping(coast);
-    LeftMiddle.setStopping(coast);
   }
 }
-
-/*void goSlow(){
-  if(Controller1.ButtonX.pressing()){
-    LeftBack.spin(forward, 50, percent);
-    RightBack.spin(forward, 50, percent);
-    LeftFront.spin(forward, 50, percent);
-    RightFront.spin(forward, 50, percent);
-    RightMiddle.spin(forward, 50, percent);
-    LeftMiddle.spin(forward, 50, percent);
-  }
-  else if(Controller1.ButtonB.pressing()){
-    LeftBack.spin(reverse, 50, percent);
-    RightBack.spin(reverse, 50, percent);
-    LeftFront.spin(reverse, 50, percent);
-    RightFront.spin(reverse, 50, percent);
-    RightMiddle.spin(reverse, 50, percent);
-    LeftMiddle.spin(reverse, 50, percent);
-  }
-  else if(Controller1.ButtonY.pressing()){
-    LeftBack.spin(reverse, 50, percent);
-    RightBack.spin(forward, 50, percent);
-    LeftFront.spin(reverse, 50, percent);
-    RightFront.spin(forward, 50, percent);
-    RightMiddle.spin(forward, 50, percent);
-    LeftMiddle.spin(forward, 50, percent);
-  }
-  else if(Controller1.ButtonA.pressing()){
-    LeftBack.spin(forward, 50, percent);
-    RightBack.spin(reverse, 50, percent);
-    LeftFront.spin(forward, 50, percent);
-    RightFront.spin(reverse, 50, percent);
-    RightMiddle.spin(reverse, 50, percent);
-    LeftMiddle.spin(reverse, 50, percent);
-  }
-  else{
-    RightBack.stop(hold);
-    RightFront.stop(hold);
-    LeftBack.stop(hold);
-    LeftFront.stop(hold);
-    LeftMiddle.stop(hold);
-    RightMiddle.stop(hold);
-  }
-} */
 
 void simpleDrive(){
   double forwardAmount = Controller1.Axis3.position();
@@ -233,21 +167,6 @@ void simpleDrive(){
   RightBack.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   LeftFront.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
   LeftBack.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
-}
-//Void that controls the movement of the 4-bar lift
-void armLift(){
-  if (Controller1.ButtonL2.pressing()) {
-    RightLift.setVelocity(90, percent);
-    RightLift.spin(forward);
-  }
-  else if (Controller1.ButtonL1.pressing()){
-    RightLift.setVelocity(90, percent);
-    RightLift.spin(reverse);
-  }
-  else{
-    RightLift.setStopping(hold);
-    RightLift.stop();
-  }
 }
 
 bool Controller1XY = true;
@@ -348,41 +267,18 @@ void TempBattery() {
 
 void intakeRollerMovement() {
   if(Controller1.ButtonR1.pressing()){
-    /*Clamp.setVelocity(200,percent);
-    Clamp.spin(forward);*/
     IntakeRoller.setVelocity(100, percent);
     IntakeRoller.spin(forward);
   }
   else if(Controller1.ButtonR2.pressing()){
-    /*Clamp.setVelocity(200, percent);
-    Clamp.spin(reverse);*/
     IntakeRoller.setVelocity(100, percent);
     IntakeRoller.spin(reverse);
   }
   else{
-    /*Clamp.setStopping(hold);
-    Clamp.stop();*/
     IntakeRoller.setStopping(hold);
     IntakeRoller.stop();
   }
 }
-/*double kP = 0.5;
-double kD = 0.2;
-void TwoMotorFly(double t){
- double c = ((Flywheel1.voltage() + Flywheel2.voltage()) / 2);
- double pe = 0;
- while (t-c > 0){
-   double c = ((Flywheel1.voltage() + Flywheel2.voltage()) / 2);
-   double e = t - c;
-   double d = pe - e;
-   pe = e;
-   Flywheel1.spin(forward, e * kP + kD * d, volt);
-   Flywheel2.spin(forward, e * kP + kD * d, volt);
- }
- Flywheel2.stop();
- Flywheel1.stop();
- 
-}*/
 
 void flywheelSpin(int velocity) {
   Flywheel1.setVelocity(velocity, pct);
@@ -456,6 +352,7 @@ void flywheelMovement() {
     */
     /*Controller1.ButtonY.pressed(flywheelFast);
     Controller1.ButtonX.pressed(flywheelSlow);*/
+    /*
     if (Controller1.ButtonY.pressing()) {
        flywheel_spin_fwd_PID(70);
        Controller1XY = false;
@@ -470,7 +367,8 @@ void flywheelMovement() {
        Flywheel2.stop();
        flyescvar = false;
      }
-     /*
+     */
+     
     if(Controller1.ButtonY.pressing()){
       Flywheel1.setVelocity(80, pct);
       Flywheel2.setVelocity(80, pct);
@@ -489,7 +387,6 @@ void flywheelMovement() {
       Flywheel1.stop();
       Flywheel2.stop();
     }
-    */
 }
 
 void indexerMovement() {
@@ -516,22 +413,16 @@ void turnCounterClockwise(double amount){
     RightBack.spin(forward, 0.2*error + 5, percent);
     LeftFront.spin(reverse, 0.2*error + 5, percent);
     RightFront.spin(forward, 0.2*error + 5, percent);
-    RightMiddle.spin(forward, 0.2*error + 5, percent);
-    LeftMiddle.spin(forward, 0.2*error + 5, percent);
     wait(5, msec);
   }
   LeftBack.setStopping(hold);
   RightBack.setStopping(hold);
   RightFront.setStopping(hold);
   LeftFront.setStopping(hold);
-  RightMiddle.setStopping(hold);
-  LeftMiddle.setStopping(hold);
   LeftBack.stop();
   RightBack.stop();
   RightFront.stop();
   LeftFront.stop();
-  RightMiddle.stop();
-  LeftMiddle.stop();
   wait(0.5, sec);
 }
 
@@ -543,39 +434,28 @@ void turnClockwise(double amount){
     RightBack.spin(reverse, 0.2*error + 5, percent);
     LeftFront.spin(forward, 0.2*error + 5, percent);
     RightFront.spin(reverse, 0.2*error + 5, percent);
-    RightMiddle.spin(reverse, 0.2*error + 5, percent);
-    LeftMiddle.spin(reverse, 0.2*error + 5, percent);
     wait(5, msec);
   }
   LeftBack.setStopping(hold);
   RightBack.setStopping(hold);
   RightFront.setStopping(hold);
   LeftFront.setStopping(hold);
-  LeftMiddle.setStopping(hold);
-  RightMiddle.setStopping(hold);
   LeftBack.stop();
   RightBack.stop();
   RightFront.stop();
   LeftFront.stop();
-  LeftMiddle.stop();
-  RightMiddle.stop();
   wait(0.5, sec);
 }
-//BEN'S HELPER FUNCTIONS------------------------------------------------------------
 
 void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
   LeftFront.setStopping(coast);
   LeftBack.setStopping(coast);
   RightFront.setStopping(coast);
-  RightBack.setStopping(coast);
-  RightMiddle.setStopping(coast);
-  LeftMiddle.setStopping(coast); 
+  RightBack.setStopping(coast); 
   LeftFront.setVelocity(vel, percent);
   LeftBack.setVelocity(vel, percent);
   RightFront.setVelocity(vel, percent);
   RightBack.setVelocity(vel, percent);
-  RightMiddle.setVelocity(vel, percent);
-  LeftMiddle.setVelocity(vel, percent);
 
   if (smooth) {
     LeftBack.setPosition(0, degrees);
@@ -584,8 +464,6 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
     LeftBack.spin(forward);
     RightFront.spin(forward);
     RightBack.spin(forward);
-    RightMiddle.spin(forward);
-    LeftMiddle.spin(forward);
 
     while (std::abs(LeftBack.position(degrees)) < std::abs(dist)) {
       wait(10, msec);
@@ -595,16 +473,12 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
     LeftBack.stop();
     RightFront.stop();
     RightBack.stop();
-    RightMiddle.stop();
-    LeftMiddle.stop();
 
   } else {
     LeftFront.spinFor(forward, dist, degrees, false);
     LeftBack.spinFor(forward, dist, degrees, false);
     RightFront.spinFor(forward, dist, degrees, false);
-    RightBack.spinFor(forward, dist, degrees, false);
-    RightMiddle.spinFor(forward, dist, degrees, false);
-    LeftMiddle.spinFor(forward, dist, degrees, sync);
+    RightBack.spinFor(forward, dist, degrees, sync);
   }
 }
 
@@ -653,7 +527,6 @@ void pre_auton(void) {
  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   Brain.Screen.drawImageFromFile("bike discord banner.png", 0, 0);
-  RightLift.stop(hold);
   Inertial.calibrate();
   wait(3, sec);
   autonSelector();
@@ -683,15 +556,15 @@ void autonomous(void) {
       IntakeRoller.setVelocity(100, percent);
       IntakeRoller.spinFor(reverse, 1000, degrees, false);
 
-      move(forward, 50);
+      move(forward, 30);
 
-      move(reverse, 75);
+      move(reverse, 30);
 
       flywheelSpin(65);
 
       wait(2500, msec);
 
-      Indexer.setVelocity(5, pct);
+      Indexer.setVelocity(12, pct);
       Indexer.spinFor(fwd, 300, deg, false);
 
       botTurn(::left, 315);
@@ -703,7 +576,7 @@ void autonomous(void) {
       LeftFront.setPosition(0, degrees);
       
       // setting up for auton
-      RightLift.spinFor(reverse, 50, degrees, false);
+      //RightLift.spinFor(reverse, 50, degrees, false);
       
       // spinning forward towards the goal
       
@@ -713,7 +586,7 @@ void autonomous(void) {
 
       // clamp down
       
-      ClampSolenoid.set(true);
+      //ClampSolenoid.set(true);
 
       // moving backwards with the goal
 
@@ -729,7 +602,7 @@ void autonomous(void) {
 
       // placing ring in alliance goal
       
-      Sporklift.spinFor(forward, 50, degrees, true);
+      //Sporklift.spinFor(forward, 50, degrees, true);
 
       // setting up to pickup alliance goal by moving forward
       
@@ -737,7 +610,7 @@ void autonomous(void) {
 
       // 2nd part of setting up to pick up alliance goal; moving forklift down
       
-      Sporklift.spinFor(forward, 50, degrees, true);
+      //Sporklift.spinFor(forward, 50, degrees, true);
       
       // 3rd part of setting up; moving backwards with forklift down
       
@@ -745,7 +618,7 @@ void autonomous(void) {
 
       // 4th part of getting AWP; forklifting up to pick up goal
       
-      Sporklift.spinFor(reverse, 100, degrees, true);
+      //Sporklift.spinFor(reverse, 100, degrees, true);
       
       // moving forward to get the AWP
       
@@ -754,36 +627,18 @@ void autonomous(void) {
       break; 
     }
     case 4: { //Turning Test
-      botTurn(::left, 90);
-      botTurn(::right, 90);
+      flywheelSpin(70);
+      wait(3, sec);
       break;
     }
     case 5: { //AWP Carry from Left
       moveDrivetrain(100, 200, true, true);
-      ClampSolenoid.set(true);
+      //ClampSolenoid.set(true);
       break;
     }
   }
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                    Sporklift Code                         */
-/*---------------------------------------------------------------------------*/
-
-void sporkliftMovement() {
-  if(Controller1.ButtonDown.pressing()){
-    Sporklift.setVelocity(100, percent);
-    Sporklift.spin(forward);
-  }
-  else if(Controller1.ButtonUp.pressing()){
-    Sporklift.setVelocity(100, percent);
-    Sporklift.spin(reverse);
-  }
-  else{
-    Sporklift.setStopping(hold);
-    Sporklift.stop();
-  }
-}
 
 /*---------------------------------------------------------------------------*/
 /*                              User Control Task                            */
@@ -794,13 +649,11 @@ void usercontrol(void) {
  // User control code here, inside the loop
   while (1) {
     simpleDrive();
-    armLift();
     //TempBattery();
     intakeRollerMovement();
     expansionMovement();
     flywheelMovement();
     indexerMovement();
-    sporkliftMovement();
     platformMode();
     /*if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
       RightLift.stop(hold);
