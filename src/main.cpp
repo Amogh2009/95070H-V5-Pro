@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
-/*    Author:       C:\Users\abhis                                            */
+/*    Author:       C:\Users\amogh                                            */
 /*    Created:      Mon Jul 18 2022                                           */
 /*    Description:  V5 project                                                */
 /*                                                                            */
@@ -350,8 +350,6 @@ void flywheelMovement() {
     Controller1.ButtonY.pressed(flywheelFast);
     Controller1.ButtonX.pressed(flywheelSlow);
     */
-    /*Controller1.ButtonY.pressed(flywheelFast);
-    Controller1.ButtonX.pressed(flywheelSlow);*/
     /*
     if (Controller1.ButtonY.pressing()) {
        flywheel_spin_fwd_PID(70);
