@@ -143,6 +143,21 @@ void move(vex::directionType direction, int rotation) {
   RightBack.spinFor(direction, rotation, degrees, true);
 }
 
+void moveLeftDrivetrain(vex::directionType direction, int rotation) {
+  LeftFront.spinFor(direction, rotation, degrees, false);
+  LeftBack.spinFor(direction, rotation, degrees, false);
+}
+
+void moveRightDrivetrain(vex::directionType direction, int rotation) {
+  RightFront.spinFor(direction, rotation, degrees, true);
+}
+
+void botTurn3Motor(turntype direction, int rotation) {
+  LeftFront.spinFor(direction ? reverse : forward, rotation, degrees, false);
+  LeftBack.spinFor(direction ? reverse : forward, rotation, degrees, false);
+  RightFront.spinFor(direction ? forward : reverse, rotation, degrees, true);
+}
+
 void platformMode() {
   if(Controller1.ButtonX.pressing()){
     speedFactor = 6;
@@ -368,8 +383,8 @@ void flywheelMovement() {
      */
      
     if(Controller1.ButtonY.pressing()){
-      Flywheel1.setVelocity(80, pct);
-      Flywheel2.setVelocity(80, pct);
+      Flywheel1.setVelocity(87, pct);
+      Flywheel2.setVelocity(87, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);
       Controller1XY = false;
