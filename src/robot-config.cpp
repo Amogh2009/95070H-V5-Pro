@@ -15,6 +15,7 @@ motor LeftBack = motor(PORT17, ratio18_1, true);
 motor RightBack = motor(PORT11, ratio18_1, false);
 inertial Inertial = inertial(PORT21);
 digital_out Expansion = digital_out(Brain.ThreeWirePort.D);
+digital_out pneumaticsIndexer = digital_out(Brain.ThreeWirePort.H);
 motor IntakeRoller = motor(PORT20, ratio18_1, false);
 motor Flywheel1 = motor(PORT16, ratio18_1, false);
 motor Flywheel2 = motor(PORT9, ratio18_1, false);

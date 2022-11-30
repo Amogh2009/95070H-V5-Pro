@@ -261,6 +261,16 @@ void expansionMovement(void) {
   }
 }
 
+void pistonIndexerMovement(void) {
+  if(Controller1.ButtonL1.pressing()) {
+    pneumaticsIndexer.set(false);
+    wait(200, msec);
+    pneumaticsIndexer.set(true);
+  } else {
+    pneumaticsIndexer.set(true);
+  }
+}
+
 void TempBattery() {
   wait(30000, msec);
   
@@ -539,6 +549,7 @@ void autonSelector(){
 void pre_auton(void) {
  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  pneumaticsIndexer.set(true);
   Brain.Screen.drawImageFromFile("bike discord banner.png", 0, 0);
   Inertial.calibrate();
   wait(3, sec);
@@ -664,6 +675,7 @@ void usercontrol(void) {
     simpleDrive();
     //TempBattery();
     intakeRollerMovement();
+    pistonIndexerMovement();
     expansionMovement();
     flywheelMovement();
     indexerMovement();

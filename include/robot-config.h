@@ -10,6 +10,7 @@ extern motor LeftBack;
 extern motor RightBack;
 extern inertial Inertial;
 extern digital_out Expansion;
+extern digital_out pneumaticsIndexer;
 extern motor IntakeRoller;
 extern motor Flywheel1;
 extern motor Flywheel2;
