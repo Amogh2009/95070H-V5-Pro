@@ -266,8 +266,22 @@ void pistonIndexerMovement(void) {
     pneumaticsIndexer.set(false);
     wait(200, msec);
     pneumaticsIndexer.set(true);
-  } else {
+    wait(200, msec);
+  } else if (Controller1.ButtonL2.pressing()) {
+    pneumaticsIndexer.set(false);
+    wait(200, msec);
     pneumaticsIndexer.set(true);
+    wait(200, msec);
+    pneumaticsIndexer.set(false);
+    wait(200, msec);
+    pneumaticsIndexer.set(true);
+    wait(200, msec);
+    pneumaticsIndexer.set(false);
+    wait(200, msec);
+    pneumaticsIndexer.set(true);
+    wait(100, msec);
+  } else {
+    pneumaticsIndexer.set(false);
   }
 }
 
