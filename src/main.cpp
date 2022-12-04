@@ -145,11 +145,12 @@ void move(vex::directionType direction, int rotation) {
 
 void moveLeftDrivetrain(vex::directionType direction, int rotation) {
   LeftFront.spinFor(direction, rotation, degrees, false);
-  LeftBack.spinFor(direction, rotation, degrees, false);
+  LeftBack.spinFor(direction, rotation, degrees, true);
 }
 
 void moveRightDrivetrain(vex::directionType direction, int rotation) {
-  RightFront.spinFor(direction, rotation, degrees, true);
+  RightFront.spinFor(direction, rotation, degrees, false);
+  RightBack.spinFor(direction, rotation, degrees, true);
 }
 
 void botTurn3Motor(turntype direction, int rotation) {
@@ -190,7 +191,7 @@ double fly_kp = 0.1; // how fast it increases
 double fly_ki = 0.3; // how much offshoot/range of fluctuation
 double fly_kd = 0.00005; // how many fluctuations are there
 double speed_margin = 0;
-double speed_marg_pct = 2;
+double speed_marg_pct = 1;
 bool flyescvar = false;
 int speed_volt = 0;
 
@@ -212,14 +213,15 @@ double preverror = 0;
 double errorsum = 0;
 double error = 0;
 double derivative = 0;
-double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
+//double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
+double flywheel_target_speed_volt = flywheel_target_speed_pct;
 Controller1.Screen.setCursor(1,1);
 Controller1.Screen.print("         ");
 wait(20,msec);
  
  while (flyescvar == false) {
-    averagevolt = ((Flywheel1.voltage() - Flywheel2.voltage()) / 2);
-    //averagevolt = ((flywheelMotorA.velocity(velocityUnits::pct) + flywheelMotorB.velocity(velocityUnits::pct) ) / 2);
+    //averagevolt = ((Flywheel1.voltage() - Flywheel2.voltage()) / 2);
+    averagevolt = ((Flywheel1.velocity(velocityUnits::pct) - Flywheel2.velocity(velocityUnits::pct) ) / 2);
     error = flywheel_target_speed_volt - averagevolt;
     derivative = preverror - error;
     errorsum += error;
@@ -236,8 +238,8 @@ wait(20,msec);
     } else {
         //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
         //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
-        Flywheel1.spin(forward, speed_volt, volt);
-        Flywheel2.spin(reverse, speed_volt, volt);
+        Flywheel1.spin(forward, speed_volt, pct);
+        Flywheel2.spin(reverse, speed_volt, pct);
     }
     
     wait(20, msec);
@@ -249,8 +251,8 @@ wait(20,msec);
  // Maintain the speed
  //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
  //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
- Flywheel1.spin(forward, speed_volt, volt);
- Flywheel2.spin(reverse, speed_volt, volt);
+ Flywheel1.spin(forward, speed_volt, pct);
+ Flywheel2.spin(reverse, speed_volt, pct);
 }
 
 void expansionMovement(void) {
@@ -319,7 +321,7 @@ void intakeRollerMovement() {
   }
 }
 
-void flywheelSpin(int velocity) {
+void flywheelSpin(double velocity) {
   Flywheel1.setVelocity(velocity, pct);
   Flywheel2.setVelocity(velocity, pct);
   Flywheel1.spin(fwd);
@@ -522,7 +524,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "AWP Right", "Turning Test", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "Disc Shooter", "Turning Test", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -560,10 +562,17 @@ void autonSelector(){
    Controller1.rumble("..");
 }
 
+void autonIndexer(void) {
+  pneumaticsIndexer.set(true);
+  wait(200, msec);
+  pneumaticsIndexer.set(false);
+  wait(200, msec);
+}
+
 void pre_auton(void) {
  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  pneumaticsIndexer.set(true);
+  pneumaticsIndexer.set(false);
   Brain.Screen.drawImageFromFile("bike discord banner.png", 0, 0);
   Inertial.calibrate();
   wait(3, sec);
@@ -608,7 +617,23 @@ void autonomous(void) {
       botTurn(::left, 315);
       break;
     }
-    case 3: { //Right Neutral AWP
+    case 3: { //Disc Shooter
+      botTurn3Motor(::left, 48);
+      flywheelSpin(81.5);
+      wait(3380, msec);
+      //flywheel_spin_fwd_PID(60);
+      //wait(3000, msec);
+      autonIndexer();
+      wait(500, msec);
+      autonIndexer();
+      break; 
+    }
+    case 4: { //Turning Test
+      flywheelSpin(65);
+      wait(3, sec);
+      break;
+    }
+    case 5: { //AWP Carry from Left
       setStopping(coast);
       setVelocity(100);
       LeftFront.setPosition(0, degrees);
@@ -661,17 +686,6 @@ void autonomous(void) {
       // moving forward to get the AWP
       
       move(forward, 145);
-      
-      break; 
-    }
-    case 4: { //Turning Test
-      flywheelSpin(70);
-      wait(3, sec);
-      break;
-    }
-    case 5: { //AWP Carry from Left
-      moveDrivetrain(100, 200, true, true);
-      //ClampSolenoid.set(true);
       break;
     }
   }
@@ -714,4 +728,5 @@ int main() {
    wait(100, msec);
  }
 }
+
 
