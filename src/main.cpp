@@ -178,7 +178,7 @@ void platformMode() {
 
 void simpleDrive(){
   double forwardAmount = Controller1.Axis3.position();
-  double turnAmount = Controller1.Axis1.position(); //Axis 4 for unified joystick
+  double turnAmount = Controller1.Axis4.position(); //Axis 4 for unified joystick
   RightFront.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   RightBack.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   LeftFront.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
