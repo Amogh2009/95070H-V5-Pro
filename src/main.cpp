@@ -159,6 +159,11 @@ void botTurn3Motor(turntype direction, int rotation) {
   RightFront.spinFor(direction ? forward : reverse, rotation, degrees, true);
 }
 
+void botTurn2Motor(turntype direction, int rotation) {
+  LeftBack.spinFor(direction ? reverse : forward, rotation, degrees, false);
+  RightFront.spinFor(direction ? reverse : forward, rotation, degrees, true);
+}
+
 void platformMode() {
   if(Controller1.ButtonX.pressing()){
     speedFactor = 6;
@@ -188,10 +193,10 @@ void simpleDrive(){
 bool Controller1XY = true;
 
 double fly_kp = 0.1; // how fast it increases
-double fly_ki = 0.000001; // how much offshoot/range of fluctuation
-double fly_kd = 0.5; // how many fluctuations are there
+double fly_ki = 0.3; // how much offshoot/range of fluctuation
+double fly_kd = 0.00005; // how many fluctuations are there
 double speed_margin = 0;
-double speed_marg_pct = 1;
+double speed_marg_pct = 2;
 bool flyescvar = false;
 int speed_volt = 0;
 
@@ -207,53 +212,51 @@ void flywheel_spin_fwd(double flywheel_target_speed_pct) {
 
 //flywheel spin PID code
 void flywheel_spin_fwd_PID(double flywheel_target_speed_pct){
-  double speed_volt = 0;
-  //double averagevolt = 0;
-  double average_speed_pct = 0;
-  double preverror = 0;
-  double errorsum = 0;
-  double error = 0;
-  double derivative = flywheel_target_speed_pct;
-  //double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
-  Controller1.Screen.setCursor(1,1);
-  Controller1.Screen.print("         ");
-  wait(20,msec);
+  //speed_volt = 0;
+double averagevolt = 0;
+double preverror = 0;
+double errorsum = 0;
+double error = 0;
+double derivative = 0;
+double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
+Controller1.Screen.setCursor(1,1);
+Controller1.Screen.print("         ");
+wait(20,msec);
+ 
+ while (flyescvar == false) {
+    averagevolt = ((Flywheel1.voltage() - Flywheel2.voltage()) / 2);
+    //averagevolt = ((flywheelMotorA.velocity(velocityUnits::pct) + flywheelMotorB.velocity(velocityUnits::pct) ) / 2);
+    error = flywheel_target_speed_volt - averagevolt;
+    derivative = preverror - error;
+    errorsum += error;
+    preverror = error;
+    speed_margin = fabs((error/flywheel_target_speed_volt) * 100);
+    speed_volt =  error * fly_kp + fly_ki * errorsum + fly_kd * derivative;
   
-  while (flyescvar == false) {
-      // averagevolt = ((Flywheel1.voltage() - Flywheel2.voltage()) / 2);
-      average_speed_pct = (Flywheel1.velocity(percent) - Flywheel2.velocity(percent)) / 2;
-      //error = flywheel_target_speed_volt - averagevolt;
-      error = flywheel_target_speed_pct - average_speed_pct;
-      derivative = preverror - error;
-      errorsum += error;
-      preverror = error;
-      speed_margin = fabs((error/flywheel_target_speed_pct) * 100);
-      speed_volt =  (error * fly_kp + fly_ki * errorsum + fly_kd * derivative) * 12 / 100;
-    
-      Controller1.Screen.setCursor(1,1);
-      Controller1.Screen.print("C:%2.1fM:%2.0f", average_speed_pct, speed_margin);
-      wait(20,msec);
-    
-      if(speed_margin <= speed_marg_pct) {
-        flyescvar = true;
-      } else {
-          //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
-          //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
-          Flywheel1.spin(forward, speed_volt, pct);
-          Flywheel2.spin(reverse, speed_volt, pct);
-      }
-      
-      wait(20, msec);
+    Controller1.Screen.setCursor(1,1);
+    Controller1.Screen.print("C:%2.1fM:%2.0f", averagevolt,speed_margin);
+    wait(20,msec);
+  
+    if(speed_margin <= speed_marg_pct) {
+      flyescvar = true;
+    } else {
+        //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
+        //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
+        Flywheel1.spin(forward, speed_volt, volt);
+        Flywheel2.spin(reverse, speed_volt, volt);
     }
-  Controller1.Screen.setCursor(3,9);
-  Controller1.Screen.print("DONE");
-  wait(20,msec);
-  
-  // Maintain the speed
-  //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
-  //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
-  Flywheel1.spin(forward, speed_volt, pct);
-  Flywheel2.spin(reverse, speed_volt, pct);
+    
+    wait(20, msec);
+  }
+ Controller1.Screen.setCursor(3,9);
+ Controller1.Screen.print("DONE");
+ wait(20,msec);
+ 
+ // Maintain the speed
+ //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
+ //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
+ Flywheel1.spin(forward, speed_volt, volt);
+ Flywheel2.spin(reverse, speed_volt, volt);
 }
 
 void expansionMovement(void) {
@@ -410,10 +413,11 @@ void flywheelMovement() {
      */
      
     if(Controller1.ButtonY.pressing()){
-      Flywheel1.setVelocity(87, pct);
+      /*Flywheel1.setVelocity(87, pct);
       Flywheel2.setVelocity(87, pct);
       Flywheel1.spin(forward);
-      Flywheel2.spin(reverse);
+      Flywheel2.spin(reverse);*/
+      flywheel_spin_fwd_PID(30);
       Controller1XY = false;
     } else if(Controller1.ButtonX.pressing()) {
       Flywheel1.setVelocity(70, pct);
@@ -619,14 +623,24 @@ void autonomous(void) {
       break;
     }
     case 3: { //Disc Shooter
-      botTurn3Motor(::left, 48);
-      flywheelSpin(81.5);
+      botTurn3Motor(::left, 39);
+      flywheel_spin_fwd_PID(62.95);
       wait(3380, msec);
       //flywheel_spin_fwd_PID(60);
       //wait(3000, msec);
       autonIndexer();
-      wait(500, msec);
+      wait(2090, msec);
       autonIndexer();
+      Flywheel1.stop();
+      Flywheel2.stop();
+      RightFront.spinFor(fwd, 200, deg, true);
+      LeftFront.spinFor(reverse, 200, deg, false);
+      LeftBack.spinFor(reverse, 200, deg, true);
+      RightFront.spinFor(fwd, 200, deg, true);
+      LeftFront.spinFor(reverse, 200, deg, false);
+      LeftBack.spinFor(reverse, 200, deg, true);
+      RightFront.spinFor(fwd, 200, deg, true);
+      move(fwd, 40);
       break; 
     }
     case 4: { //Turning Test
