@@ -417,19 +417,21 @@ void flywheelMovement() {
       Flywheel2.setVelocity(87, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);*/
-      flywheel_spin_fwd_PID(30);
+      flywheel_spin_fwd_PID(85);
       Controller1XY = false;
     } else if(Controller1.ButtonX.pressing()) {
-      Flywheel1.setVelocity(70, pct);
+      /*Flywheel1.setVelocity(70, pct);
       Flywheel2.setVelocity(70, pct);
       Flywheel1.spin(forward);
-      Flywheel2.spin(reverse);
+      Flywheel2.spin(reverse);*/
+      flywheel_spin_fwd_PID(60);
       Controller1XY = false;
     } else if(!Controller1XY) {
       Flywheel1.setStopping(coast);
       Flywheel2.setStopping(coast);
       Flywheel1.stop();
       Flywheel2.stop();
+      Controller1XY = true;
     }
 }
 
