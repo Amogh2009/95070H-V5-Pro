@@ -108,7 +108,7 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
 }
 //Void that controls the drivetrain based on inputs from the joysticks
 
-double speedFactor = 0.25;
+double speedFactor = 0.15;
 
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
@@ -424,7 +424,7 @@ void flywheelMovement() {
       Flywheel2.setVelocity(70, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);*/
-      flywheel_spin_fwd_PID(61.5);
+      flywheel_spin_fwd_PID(52.5);
       Controller1XY = false;
     } else if(!Controller1XY) {
       Flywheel1.setStopping(coast);
