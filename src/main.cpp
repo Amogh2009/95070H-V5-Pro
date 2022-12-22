@@ -219,6 +219,8 @@ double errorsum = 0;
 double error = 0;
 double derivative = 0;
 double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
+Controller1.Screen.setCursor(3, 9);
+Controller1.Screen.print("    ");
 Controller1.Screen.setCursor(1,1);
 Controller1.Screen.print("         ");
 wait(20,msec);
@@ -285,7 +287,7 @@ void pistonIndexerMovement(void) {
     pneumaticsIndexer.set(false);
     wait(200, msec);
     pneumaticsIndexer.set(true);
-    wait(100, msec);
+    wait(200, msec);
   } else {
     pneumaticsIndexer.set(false);
   }
@@ -432,6 +434,7 @@ void flywheelMovement() {
       Flywheel1.stop();
       Flywheel2.stop();
       Controller1XY = true;
+      flyescvar = false;
     }
 }
 
