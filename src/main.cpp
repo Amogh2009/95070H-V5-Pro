@@ -416,7 +416,7 @@ void flywheelMovement() {
      
     if(Controller1.ButtonY.pressing()){
       /*Flywheel1.setVelocity(87, pct);
-      Flywheel2.setVelocity(87, pct);
+      Flywheel2.setVelocity(87, pct);]
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);*/
       flywheel_spin_fwd_PID(85);
@@ -426,7 +426,7 @@ void flywheelMovement() {
       Flywheel2.setVelocity(70, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);*/
-      flywheel_spin_fwd_PID(52.5);
+      flywheel_spin_fwd_PID(63);
       Controller1XY = false;
     } else if(!Controller1XY) {
       Flywheel1.setStopping(coast);
