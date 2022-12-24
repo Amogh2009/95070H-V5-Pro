@@ -198,7 +198,7 @@ double fly_kd = 0.00005; // how many fluctuations are there
 double speed_margin = 0;
 double speed_marg_pct = 2;
 bool flyescvar = false;
-int speed_volt = 0;
+double speed_volt = 0;
 
 //flywheel spin
 
