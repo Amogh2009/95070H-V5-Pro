@@ -239,15 +239,17 @@ wait(20,msec);
     Controller1.Screen.print("C:%2.1fM:%2.0f", averagevolt,speed_margin);
     wait(20,msec);
   
-    if(speed_margin <= speed_marg_pct) {
-      flyescvar = true;
-    } else {
+   // if(speed_margin <= speed_marg_pct) {
+    //  flyescvar = true;
+    //} else {
         //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
         //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
         Flywheel1.spin(forward, speed_volt, volt);
         Flywheel2.spin(reverse, speed_volt, volt);
+    //}
+    if (Controller1.ButtonB.pressing()) {
+      flyescvar = true;
     }
-    
     wait(20, msec);
   }
  Controller1.Screen.setCursor(3,9);
@@ -257,8 +259,8 @@ wait(20,msec);
  // Maintain the speed
  //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
  //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
- Flywheel1.spin(forward, speed_volt, volt);
- Flywheel2.spin(reverse, speed_volt, volt);
+ //Flywheel1.spin(forward, speed_volt, volt);
+ //Flywheel2.spin(reverse, speed_volt, volt);
 }
 
 void expansionMovement(void) {
