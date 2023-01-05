@@ -237,24 +237,21 @@ wait(20,msec);
   
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("C:%2.1fM:%2.0f", averagevolt,speed_margin);
-    wait(20,msec);
+    wait(5, msec);
   
-   // if(speed_margin <= speed_marg_pct) {
-    //  flyescvar = true;
-    //} else {
+    if(speed_margin <= speed_marg_pct) {
+      flyescvar = true;
+    } else {
         //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
         //flywheelMotorB.spin(forward, speed_volt, velocityUnits::pct);
         Flywheel1.spin(forward, speed_volt, volt);
         Flywheel2.spin(reverse, speed_volt, volt);
-    //}
-    if (Controller1.ButtonB.pressing()) {
-      flyescvar = true;
     }
-    wait(20, msec);
+    wait(15, msec);
   }
  Controller1.Screen.setCursor(3,9);
  Controller1.Screen.print("DONE");
- wait(20,msec);
+ wait(5,msec);
  
  // Maintain the speed
  //flywheelMotorA.spin(forward, speed_volt, velocityUnits::pct);
@@ -421,6 +418,7 @@ void flywheelMovement() {
       Flywheel2.setVelocity(87, pct);]
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);*/
+      flyescvar = false;
       flywheel_spin_fwd_PID(85);
       Controller1XY = false;
     } else if(Controller1.ButtonX.pressing()) {
@@ -428,6 +426,7 @@ void flywheelMovement() {
       Flywheel2.setVelocity(70, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);*/
+      flyescvar = false;
       flywheel_spin_fwd_PID(59);
       Controller1XY = false;
     } else if(!Controller1XY) {
