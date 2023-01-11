@@ -108,7 +108,7 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
 }
 //Void that controls the drivetrain based on inputs from the joysticks
 
-double speedFactor = 0.15;
+double speedFactor = 1;
 
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
@@ -165,7 +165,7 @@ void botTurn2Motor(turntype direction, int rotation) {
 }
 
 void platformMode() {
-  if(Controller1.ButtonX.pressing()){
+  if(Controller1.ButtonY.pressing()){
     speedFactor = 6;
     LeftFront.setStopping(hold);
     LeftBack.setStopping(hold);
