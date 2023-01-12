@@ -260,6 +260,32 @@ wait(10,msec);
  //Flywheel2.spin(reverse, speed_volt, volt);
 }
 
+double preverror = 0;
+double errorsum = 0;
+double error = 0;
+double derivative = 0;
+void flyPIDadjustment(double flywheel_target_speed_pct) {
+  double averagevolt = 0;
+  
+  double flywheel_target_speed_volt = (flywheel_target_speed_pct/100)*12;
+  //Controller1.Screen.setCursor(3, 9);
+  //Controller1.Screen.print("    ");
+  //Controller1.Screen.setCursor(1,1);
+  //Controller1.Screen.print("         ");
+  //wait(10,msec);
+
+  averagevolt = ((Flywheel1.voltage() - Flywheel2.voltage()) / 2);
+  error = flywheel_target_speed_volt - averagevolt;
+  derivative = preverror - error;
+  errorsum += error;
+  preverror = error;
+  speed_margin = fabs((error/flywheel_target_speed_volt) * 100);
+  speed_volt =  error * fly_kp + fly_ki * errorsum + fly_kd * derivative;
+  
+  Flywheel1.spin(forward, speed_volt, volt);
+  Flywheel2.spin(reverse, speed_volt, volt);
+}
+
 void expansionMovement(void) {
   if(Controller1.ButtonB.pressing()) {
     Expansion.set(true);
@@ -388,6 +414,19 @@ void flywheelPIDSlow() {
     flyescvar = false;
     //Flywheel1.stop();
     //Flywheel2.stop();
+  }
+}
+
+void flywheelPIDmovement() {
+  if(Controller1.ButtonY.pressing()) {
+    flyPIDadjustment(80);
+  }
+  else if(Controller1.ButtonX.pressing()) {
+    flyPIDadjustment(65);
+  }
+  else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
+    Flywheel1.stop();
+    Flywheel2.stop();
   }
 }
 
@@ -798,7 +837,7 @@ void usercontrol(void) {
     intakeRollerMovement();
     pistonIndexerMovement();
     expansionMovement();
-    flywheelMovement();
+    flywheelPIDmovement();
     indexerMovement();
     platformMode();
     /*if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
