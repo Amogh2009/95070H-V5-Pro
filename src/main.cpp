@@ -418,11 +418,11 @@ void flywheelPIDSlow() {
 }
 
 void flywheelPIDmovement() {
-  if(Controller1.ButtonY.pressing()) {
+  if(Controller1.ButtonX.pressing()) {
     flyPIDadjustment(80);
   }
-  else if(Controller1.ButtonX.pressing()) {
-    flyPIDadjustment(65);
+  else if(Controller1.ButtonY.pressing()) {
+    flyPIDadjustment(77);
   }
   else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
     Flywheel1.stop();
