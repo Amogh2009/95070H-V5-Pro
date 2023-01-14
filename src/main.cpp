@@ -192,7 +192,7 @@ void simpleDrive(){
 
 bool Controller1XY = true;
 
-double fly_kp = 0.1; // how fast it increases
+double fly_kp = 0.25; // how fast it increases
 double fly_ki = 0.3; // how much offshoot/range of fluctuation
 double fly_kd = 0.00005; // how many fluctuations are there
 double speed_margin = 0;
@@ -287,7 +287,7 @@ void flyPIDadjustment(double flywheel_target_speed_pct) {
 }
 
 void expansionMovement(void) {
-  if(Controller1.ButtonB.pressing()) {
+  if((Controller1.ButtonUp.pressing()) && (Controller1.ButtonDown.pressing())) {
     Expansion.set(true);
   } else {
     Expansion.set(false);
@@ -706,18 +706,53 @@ void autonomous(void) {
       //flywheel_spin_fwd_PID(95);
       //wait(3000, msec);
       autonIndexer();
-      wait(3500, msec);
+      wait(3700, msec);
       autonIndexer();
+      wait(200, msec);
       Flywheel1.stop();
       Flywheel2.stop();
-      RightFront.spinFor(fwd, 200, deg, true);
-      LeftFront.spinFor(reverse, 200, deg, false);
-      LeftBack.spinFor(reverse, 200, deg, true);
-      RightFront.spinFor(fwd, 200, deg, true);
-      LeftFront.spinFor(reverse, 200, deg, false);
-      LeftBack.spinFor(reverse, 200, deg, true);
-      RightFront.spinFor(fwd, 200, deg, true);
-      move(fwd, 40);
+      wait(500, msec);
+      LeftFront.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(forward);
+      RightBack.spin(forward);
+      wait(350, msec);
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
+      //
+      wait(500, msec);
+      LeftFront.spin(forward);
+      LeftBack.spin(forward);
+      RightFront.spin(forward);
+      RightBack.spin(forward);
+      wait(250, msec);
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
+      wait(500, msec);
+      LeftFront.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(forward);
+      RightBack.spin(forward);
+      wait(1250, msec);
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
+      wait(500, msec);
+      IntakeRoller.spinFor(reverse, 800, degrees, false);
+      LeftFront.spin(forward);
+      LeftBack.spin(forward);
+      RightFront.spin(forward);
+      RightBack.spin(forward);
+      wait(800, msec);
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
       break; 
     }
     case 4: { //Roller Other Side
