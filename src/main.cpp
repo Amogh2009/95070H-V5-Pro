@@ -702,7 +702,7 @@ void autonomous(void) {
     case 3: { //Disc Shooter
       botTurn3Motor(::left, 39);
       flywheelSpin(96);
-      wait(3790, msec);
+      wait(4000, msec);
       //flywheel_spin_fwd_PID(95);
       //wait(3000, msec);
       autonIndexer();
