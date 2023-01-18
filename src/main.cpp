@@ -108,7 +108,7 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
 }
 //Void that controls the drivetrain based on inputs from the joysticks
 
-double speedFactor = 1;
+double speedFactor = 3;
 
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
@@ -136,11 +136,21 @@ void botTurn(turntype direction, int rotation) {
   RightBack.spinFor(direction ? forward : reverse, rotation, degrees, true);
 }
 
-void move(vex::directionType direction, int rotation) {
-  LeftFront.spinFor(direction, rotation, degrees, false);
+void move(vex::directionType direction, int time) {
+  /*LeftFront.spinFor(direction, rotation, degrees, false);
   LeftBack.spinFor(direction, rotation, degrees, false);
   RightFront.spinFor(direction, rotation, degrees, false);
-  RightBack.spinFor(direction, rotation, degrees, true);
+  RightBack.spinFor(direction, rotation, degrees, true);*/
+  LeftFront.spin(direction);
+  RightFront.spin(direction);
+  LeftBack.spin(direction);
+  RightBack.spin(direction);
+  wait(time, msec);
+  LeftFront.stop();
+  RightFront.stop();
+  LeftBack.stop();
+  RightBack.stop();
+  wait(500, msec);
 }
 
 void moveLeftDrivetrain(vex::directionType direction, int rotation) {
@@ -287,13 +297,12 @@ void flyPIDadjustment(double flywheel_target_speed_pct) {
 }
 
 void expansionMovement(void) {
-  if((Controller1.ButtonUp.pressing()) && (Controller1.ButtonDown.pressing())) {
+  if((Controller1.ButtonUp.pressing()) && (Controller1.ButtonDown.pressing()) && (Controller1.ButtonLeft.pressing()) && (Controller1.ButtonRight.pressing())) {
     Expansion.set(true);
   } else {
     Expansion.set(false);
   }
 }
-
 void pistonIndexerMovement(void) {
   if(Controller1.ButtonL1.pressing()) {
     pneumaticsIndexer.set(false);
@@ -302,15 +311,15 @@ void pistonIndexerMovement(void) {
     wait(200, msec);
   } else if (Controller1.ButtonL2.pressing()) {
     pneumaticsIndexer.set(false);
-    wait(200, msec);
+    //wait(200, msec);
     pneumaticsIndexer.set(true);
     wait(200, msec);
     pneumaticsIndexer.set(false);
-    wait(200, msec);
+    wait(1200, msec);
     pneumaticsIndexer.set(true);
     wait(200, msec);
     pneumaticsIndexer.set(false);
-    wait(200, msec);
+    wait(1500, msec);
     pneumaticsIndexer.set(true);
     wait(200, msec);
   } else {
@@ -422,7 +431,7 @@ void flywheelPIDmovement() {
     flyPIDadjustment(80);
   }
   else if(Controller1.ButtonY.pressing()) {
-    flyPIDadjustment(77);
+    flyPIDadjustment(76);
   }
   else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
     Flywheel1.stop();
@@ -453,8 +462,8 @@ void flywheelMovement() {
      */
      
     if(Controller1.ButtonY.pressing()){
-      Flywheel1.setVelocity(82, pct);
-      Flywheel2.setVelocity(82, pct);
+      Flywheel1.setVelocity(81, pct);
+      Flywheel2.setVelocity(81, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);
       //flyescvar = false;
@@ -465,8 +474,10 @@ void flywheelMovement() {
       Flywheel2.setVelocity(77, pct);
       Flywheel1.spin(forward);
       Flywheel2.spin(reverse);*/
-      flyescvar = false;
-      flywheel_spin_fwd_PID(77);
+      Flywheel1.setVelocity(77, pct);
+      Flywheel2.setVelocity(77, pct);
+      Flywheel1.spin(fwd);
+      Flywheel2.spin(reverse);
       Controller1XY = false;
     } else if(!Controller1XY) {
       Flywheel1.setStopping(coast);
@@ -574,7 +585,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "Disc Shooter", "Roller Other Side", "Right Neutral AWP", "Right Mid", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "Disc Shooter", "Roller Other Side", "Disc Shooter Two", "Right Mid", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -650,59 +661,13 @@ void autonomous(void) {
       break;
     }
     case 2: { //1 Roller + Low Goal
-      IntakeRoller.setVelocity(100, percent);
-      IntakeRoller.spinFor(reverse, 800, degrees, false);
-
-      move(forward, 30);
-
-      move(reverse, 30);
-
-      flywheelSpin(69);
-
-      wait(2500, msec);
-
-      LeftFront.spin(reverse);
-      LeftBack.spin(reverse);
-      RightFront.spin(reverse);
-      RightBack.spin(reverse);
-
-      wait(300, msec);
-      
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-
-      wait(1, sec);
-
-      LeftFront.spin(reverse);
-      LeftBack.spin(reverse);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-
-      wait (850, msec);
-
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-
-      wait (500, msec);
-
-      autonIndexer();
-      wait(500, msec);
-      autonIndexer();
-
-      wait(2, sec);
-
-      Flywheel1.stop();
-      Flywheel2.stop();
+       
       break;
     }
     case 3: { //Disc Shooter
       botTurn3Motor(::left, 39);
-      flywheelSpin(96);
-      wait(4000, msec);
+      flywheelSpin(100);
+      wait(4200, msec);
       //flywheel_spin_fwd_PID(95);
       //wait(3000, msec);
       autonIndexer();
@@ -800,59 +765,81 @@ void autonomous(void) {
       RightBack.stop();
       break;
     }
-    case 5: { //AWP Carry from Left
-      setStopping(coast);
-      setVelocity(100);
-      LeftFront.setPosition(0, degrees);
-      
-      // setting up for auton
-      //RightLift.spinFor(reverse, 50, degrees, false);
-      
-      // spinning forward towards the goal
-      
-      move(forward, x);
+    case 5: { //Disc Shooter 2
+      IntakeRoller.setVelocity(100, percent);
+      IntakeRoller.spinFor(reverse, 400, degrees, false);
 
-      wait(100, msec);
+      move(forward, 200);
+      //move(reverse, 200);
 
-      // clamp down
-      
-      //ClampSolenoid.set(true);
+      flywheelSpin(85);
 
-      // moving backwards with the goal
+      //wait(2500, msec);
 
-      move(reverse, x);
+      LeftFront.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(reverse);
+      RightBack.spin(reverse);
 
-      // turning 90°
+      wait(250, msec);
       
-      botTurn(::left, 250);
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
 
-      // moving backwards to place ring in alliance goal
-      
-      move(reverse, 100);
+      wait(500, msec);
 
-      // placing ring in alliance goal
-      
-      //Sporklift.spinFor(forward, 50, degrees, true);
+      LeftFront.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(fwd);
+      RightBack.spin(fwd);
 
-      // setting up to pickup alliance goal by moving forward
-      
-      move(forward, 135);
+      wait (1200, msec);
 
-      // 2nd part of setting up to pick up alliance goal; moving forklift down
-      
-      //Sporklift.spinFor(forward, 50, degrees, true);
-      
-      // 3rd part of setting up; moving backwards with forklift down
-      
-      move(reverse, 150);
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
 
-      // 4th part of getting AWP; forklifting up to pick up goal
-      
-      //Sporklift.spinFor(reverse, 100, degrees, true);
-      
-      // moving forward to get the AWP
-      
-      move(forward, 145);
+      wait (300, msec);
+
+      IntakeRoller.spin(forward);
+
+      move(forward, 1650);
+
+      move(forward, 1200);
+
+      //IntakeRoller.stop();
+
+      LeftFront.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(fwd);
+      RightBack.spin(fwd);
+
+      wait (900, msec);
+
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
+
+      wait (300, msec);
+      move(fwd, 500);
+      IntakeRoller.stop();
+
+      autonIndexer();
+      wait(2000, msec);
+      autonIndexer();
+      wait(2000, msec);
+      autonIndexer();
+      wait(1000, msec);
+      autonIndexer();
+
+      wait(2, sec);
+
+      Flywheel1.stop();
+      Flywheel2.stop();
       break;
     }
   }
