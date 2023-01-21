@@ -428,7 +428,7 @@ void flywheelPIDSlow() {
 
 void flywheelPIDmovement() {
   if(Controller1.ButtonX.pressing()) {
-    flyPIDadjustment(80);
+    flywheelSpin(100);
   }
   else if(Controller1.ButtonY.pressing()) {
     flyPIDadjustment(76);
@@ -585,7 +585,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "Disc Shooter", "Roller Other Side", "Disc Shooter Two", "Right Mid", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "Disc Shooter", "Roller Other Side", "Disc Shooter Two", "Skills Roller", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -661,17 +661,63 @@ void autonomous(void) {
       break;
     }
     case 2: { //1 Roller + Low Goal
-       
+      IntakeRoller.setVelocity(100, percent);
+      IntakeRoller.spinFor(reverse, 800, degrees, false);
+
+      move(forward, 200);
+
+      //move(reverse, 200);
+
+      flywheelSpin(70);
+
+      wait(2500, msec);
+
+      LeftFront.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(reverse);
+      RightBack.spin(reverse);
+
+      wait(300, msec);
+      
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
+
+      wait(1, sec);
+
+      LeftFront.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(forward);
+      RightBack.spin(forward);
+
+      wait (850, msec);
+
+      LeftFront.stop();
+      LeftBack.stop();
+      RightFront.stop();
+      RightBack.stop();
+
+      wait (500, msec);
+
+      autonIndexer();
+      wait(500, msec);
+      autonIndexer();
+
+      wait(2, sec);
+
+      Flywheel1.stop();
+      Flywheel2.stop();
       break;
     }
     case 3: { //Disc Shooter
-      botTurn3Motor(::left, 39);
-      flywheelSpin(100);
+      botTurn3Motor(::left, 30);
+      flywheelSpin(87);
       wait(4200, msec);
       //flywheel_spin_fwd_PID(95);
       //wait(3000, msec);
       autonIndexer();
-      wait(3700, msec);
+      wait(4000, msec);
       autonIndexer();
       wait(200, msec);
       Flywheel1.stop();
@@ -702,7 +748,7 @@ void autonomous(void) {
       LeftBack.spin(reverse);
       RightFront.spin(forward);
       RightBack.spin(forward);
-      wait(1250, msec);
+      wait(1300, msec);
       LeftFront.stop();
       LeftBack.stop();
       RightFront.stop();
@@ -842,7 +888,11 @@ void autonomous(void) {
       Flywheel2.stop();
       break;
     }
+    case 6: { // Skills Roller
+
+    break;
   }
+  } 
 }
 
 
