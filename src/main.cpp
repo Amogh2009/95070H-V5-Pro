@@ -428,10 +428,10 @@ void flywheelPIDSlow() {
 
 void flywheelPIDmovement() {
   if(Controller1.ButtonX.pressing()) {
-    flywheelSpin(100);
+    flywheelSpin(93);
   }
   else if(Controller1.ButtonY.pressing()) {
-    flyPIDadjustment(76);
+    flyPIDadjustment(73);
   }
   else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
     Flywheel1.stop();
@@ -711,8 +711,8 @@ void autonomous(void) {
       break;
     }
     case 3: { //Disc Shooter
-      botTurn3Motor(::left, 30);
-      flywheelSpin(87);
+      botTurn3Motor(::left, 35);
+      flywheelSpin(90);
       wait(4200, msec);
       //flywheel_spin_fwd_PID(95);
       //wait(3000, msec);
