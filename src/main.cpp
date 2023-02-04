@@ -889,7 +889,19 @@ void autonomous(void) {
       break;
     }
     case 6: { // Skills Roller
-
+    setStopping(hold);
+    setVelocity(69);
+    IntakeRoller.spin(reverse);
+    move(fwd, 200);
+    wait(120, msec);
+    IntakeRoller.stop();
+    move(reverse, 630);
+    LeftFront.spin(fwd);
+    LeftBack.spin(fwd);
+    RightFront.spin(reverse);
+    RightBack.spin(reverse);
+    wait(120, msec);
+    move(fwd, 200);
     break;
   }
   } 
