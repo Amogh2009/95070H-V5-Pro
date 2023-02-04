@@ -902,6 +902,7 @@ void autonomous(void) {
     RightBack.spin(reverse);
     wait(120, msec);
     move(fwd, 200);
+    Expansion.set(true);
     break;
   }
   } 
