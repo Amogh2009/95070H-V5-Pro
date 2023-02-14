@@ -196,8 +196,10 @@ void simpleDrive(){
   double turnAmount = Controller1.Axis4.position(); //Axis 4 for unified joystick
   RightFront.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   RightBack.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
+  //RightMiddle.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
   LeftFront.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
   LeftBack.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
+  //LeftMiddle.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
 }
 
 bool Controller1XY = true;
